@@ -5,15 +5,13 @@ import PopupDialog from '~/components/popup-dialog/PopupDialog'
 
 const closeModal = vi.fn()
 const closeModalAfterDelay = vi.fn()
-const setFullScreen = vi.fn()
 
 const props = {
   content: 'test',
   closeModal,
   closeModalAfterDelay,
   timerId: null,
-  isFullScreen: true,
-  setFullScreen
+  paperProps: {}
 }
 
 vi.mock('~/hooks/use-confirm', () => {
@@ -24,6 +22,7 @@ vi.mock('~/hooks/use-confirm', () => {
 
 describe('Popup dialog test', () => {
   beforeEach(() => {
+    vi.clearAllMocks()
     render(<PopupDialog {...props} />)
   })
 
@@ -32,11 +31,19 @@ describe('Popup dialog test', () => {
 
     expect(content).toBeInTheDocument()
   })
+  it('should close dialog when close button clicked', () => {
+    const closeButton = screen.getByLabelText('close popup')
+
+    fireEvent.click(closeButton)
+
+    expect(closeModal).toHaveBeenCalled()
+  })
 })
 
 describe('Popup dialog test with timerId', () => {
   const propsWithTimerId = { ...props, timerId: 21 }
   beforeEach(() => {
+    vi.clearAllMocks()
     render(<PopupDialog {...propsWithTimerId} />)
   })
 
