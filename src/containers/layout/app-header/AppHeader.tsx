@@ -3,11 +3,15 @@ import Toolbar from '@mui/material/Toolbar'
 import NavBar from '~/containers/layout/navbar/NavBar'
 import { styles } from '~/containers/layout/app-header/AppHeader.styles'
 
-const AppHeader = () => {
+const AppHeader = ({
+  pageRef
+}: {
+  pageRef: React.RefObject<HTMLDivElement>
+}) => {
   return (
     <>
       <AppBar sx={styles.appBar}>
-        <NavBar />
+        <NavBar pageRef={pageRef} />
       </AppBar>
       <Toolbar data-testid='toolbar' sx={styles.toolBar} />
     </>

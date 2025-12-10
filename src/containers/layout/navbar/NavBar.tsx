@@ -29,7 +29,7 @@ import { authRoutes } from '~/router/constants/authRoutes'
 import { SizeEnum, UserRoleEnum } from '~/types'
 import { styles } from '~/containers/layout/navbar/NavBar.styles'
 
-const Navbar = () => {
+const Navbar = ({ pageRef }: { pageRef: React.RefObject<HTMLDivElement> }) => {
   const { userRole } = useAppSelector((state) => state.appMain)
   const { openDrawer, closeDrawer, isOpen } = useDrawer()
   const { openMenu, renderMenu, closeMenu, anchorEl } = useMenu()
@@ -37,7 +37,7 @@ const Navbar = () => {
   const { t } = useTranslation()
 
   const goToTop = () => {
-    document.getElementById('box-content')?.scrollTo({
+    pageRef.current?.scrollTo({
       top: 0,
       behavior: 'smooth'
     })
