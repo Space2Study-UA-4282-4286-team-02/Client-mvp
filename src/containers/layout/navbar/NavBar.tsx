@@ -36,6 +36,13 @@ const Navbar = () => {
   const { pathname } = useLocation()
   const { t } = useTranslation()
 
+  const goToTop = () => {
+    document.getElementById('box-content')?.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
   const isChildRouteActive = findOffersChildRoutes.some((childRoute) =>
     Boolean(matchPath(childRoute.path, pathname))
   )
@@ -103,6 +110,7 @@ const Navbar = () => {
     <Box sx={styles.header}>
       <Button
         component={Link}
+        onClick={goToTop}
         size={SizeEnum.Small}
         sx={styles.logoButton}
         to={guestRoutes.home.path}

@@ -13,6 +13,7 @@ const Logo: FC<LogoProps> = ({ light = false, ...props }) => (
     alt='logo'
     component={ComponentEnum.Img}
     src={light ? logoLight : logo}
+    sx={{ cursor: 'pointer', ...props.sx }}
     {...props}
   />
 )
