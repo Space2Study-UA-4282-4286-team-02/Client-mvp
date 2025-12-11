@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react'
+import React from 'react'
 import { vi } from 'vitest'
 import AppMain from '~/containers/layout/app-main/AppMain'
 import { renderWithProviders } from '~tests/test-utils'
@@ -31,13 +32,17 @@ vi.mock('react-redux', async () => {
 
 describe('AppMain layout component test', () => {
   it('should render loader', () => {
-    renderWithProviders(<AppMain />, { preloadedState: mockState })
+    const pageRef = React.createRef()
+    renderWithProviders(<AppMain mainWithFooterRef={pageRef} />, {
+      preloadedState: mockState
+    })
     const loader = screen.getByTestId('loader')
     expect(loader).toBeInTheDocument()
   })
 
   it('should dispatch checkAuth action', async () => {
-    renderWithProviders(<AppMain />, {
+    const pageRef = React.createRef()
+    renderWithProviders(<AppMain mainWithFooterRef={pageRef} />, {
       preloadedState: {
         appMain: {
           authLoading: false,

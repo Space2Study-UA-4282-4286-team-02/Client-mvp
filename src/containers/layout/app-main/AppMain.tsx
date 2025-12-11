@@ -1,4 +1,4 @@
-import { Suspense, useLayoutEffect, useRef } from 'react'
+import React, { Suspense, useLayoutEffect, useRef } from 'react'
 import { Outlet, useNavigation } from 'react-router-dom'
 import Box from '@mui/material/Box'
 
@@ -12,8 +12,12 @@ import { checkAuth } from '~/redux/reducer'
 
 import { styles } from '~/containers/app-content/AppContent.styles'
 
-const AppMain = () => {
-  const mainWithFooter = useRef(null)
+const AppMain = ({
+  mainWithFooterRef
+}: {
+  mainWithFooterRef: React.RefObject<HTMLDivElement>
+}) => {
+  // const mainWithFooter = useRef(null)
   const authCheckRef = useRef(false)
   const { loading } = useAppSelector((state) => state.appMain)
   const { state } = useNavigation()
@@ -32,12 +36,12 @@ const AppMain = () => {
   }
 
   return (
-    <Box ref={mainWithFooter} sx={styles.content}>
+    <Box ref={mainWithFooterRef} sx={styles.content}>
       <Suspense fallback={<Loader pageLoad />}>
         <AppBreadCrumbs />
-        <ScrollToTop element={mainWithFooter} />
-        <Outlet context={{ pageRef: mainWithFooter }} />
-        <ScrollToTopButton element={mainWithFooter} />
+        <ScrollToTop element={mainWithFooterRef} />
+        <Outlet context={{ pageRef: mainWithFooterRef }} />
+        <ScrollToTopButton element={mainWithFooterRef} />
         <Footer />
       </Suspense>
     </Box>
