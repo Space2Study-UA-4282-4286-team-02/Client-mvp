@@ -22,10 +22,11 @@ export const styles = {
     title: {
       typography: 'h5',
       fontWeight: 500,
-      mb: '16px'
+      mb: '8px'
     },
     description: {
-      typography: 'body2'
+      typography: 'body2',
+      mb: '30px'
     }
   }
 }
