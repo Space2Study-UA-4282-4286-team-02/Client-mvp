@@ -28,7 +28,6 @@ describe('AppContentSwitcher', () => {
     expect(screen.getByText('Left Text')).toBeInTheDocument()
     expect(screen.getByText('Right Text')).toBeInTheDocument()
 
-    // MUI Switch uses role="checkbox"
     const checkbox = screen.getByRole('checkbox')
     expect(checkbox).toBeChecked()
   })
