@@ -1,9 +1,10 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { beforeEach, expect, vi } from 'vitest'
 
 import EnhancedTablePagination from '~/components/enhanced-table/enhanced-table-pagination/EnhancedTablePagination'
 
-const paginationMock = {
+const createPaginationMock = () => ({
   page: 1,
   pageInput: 1,
   rowsPerPage: 10,
@@ -13,11 +14,14 @@ const paginationMock = {
   handleChangeRowsPerPage: vi.fn(),
   handleChangePageInput: vi.fn(),
   handlePageSubmit: vi.fn()
-}
+})
 
 describe('EnhancedTablePagination test', () => {
+  let paginationMock
+
   beforeEach(() => {
     vi.clearAllMocks()
+    paginationMock = createPaginationMock()
     render(<EnhancedTablePagination pagination={paginationMock} />)
   })
 
@@ -29,12 +33,13 @@ describe('EnhancedTablePagination test', () => {
     expect(prevButton).toBeDisabled()
   })
 
-  it('should change page from 1 to 2', () => {
+  it('should change page from 1 to 2', async () => {
     const { handleChangePage } = paginationMock
 
     const nextButton = screen.getByRole('button', { name: /next/i })
 
-    fireEvent.click(nextButton)
+    await userEvent.click(nextButton)
+
     expect(handleChangePage).toHaveBeenCalledWith(expect.anything(), 2)
   })
 })
