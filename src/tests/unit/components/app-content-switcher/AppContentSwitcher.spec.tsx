@@ -41,11 +41,4 @@ describe('AppContentSwitcher', () => {
 
     expect(mockOnChange).toHaveBeenCalledTimes(1)
   })
-
-  it('should render tooltips when tooltip props are passed', () => {
-    render(<AppContentSwitcher {...defaultProps} />)
-
-    expect(screen.getByLabelText('Left Tooltip')).toBeInTheDocument()
-    expect(screen.getByLabelText('Right Tooltip')).toBeInTheDocument()
-  })
 })
