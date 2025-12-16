@@ -7,14 +7,15 @@ import { styles } from '../howItWorksStepBlock/HowItWorksStepBlock.styles'
 
 interface HowItWorksStepBlockProps {
   image: string
+  alt: string
   title: string
   description: string
-  actionLabel: string
   cardWidth: number
 }
 
 function HowItWorksStepBlock({
   image,
+  alt,
   title,
   description,
   cardWidth
@@ -23,7 +24,7 @@ function HowItWorksStepBlock({
 
   return (
     <Box sx={{ ...styles.wrapper, maxWidth: cardWidth }}>
-      <Box alt='image' component='img' src={image} sx={styles.img} />
+      <Box alt={alt} component='img' src={image} sx={styles.img} />
       <TitleWithDescription
         description={t(description)}
         style={styles.titleWithDescription}
