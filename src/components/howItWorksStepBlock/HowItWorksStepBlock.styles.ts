@@ -17,13 +17,11 @@ export const styles = {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      color: 'basic.black',
       typography: { xs: 'h6' },
       marginBottom: '16px'
     },
     description: {
-      typography: { xs: 'body2' },
-      color: 'primary.500'
+      typography: { xs: 'body2' }
     }
   }
 }
