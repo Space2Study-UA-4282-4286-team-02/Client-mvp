@@ -16,7 +16,7 @@ describe('EmailConfirmModal test', () => {
 
   it('should render positive-scenario image and title', async () => {
     const fakeData = {
-      error: false,
+      error: null,
       loading: false,
       response: null
     }
