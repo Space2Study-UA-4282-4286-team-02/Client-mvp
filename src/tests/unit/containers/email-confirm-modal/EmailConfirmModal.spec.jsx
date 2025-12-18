@@ -14,6 +14,22 @@ describe('EmailConfirmModal test', () => {
     closeModal: closeModal
   }
 
+  it('should render positive-scenario image and title', async () => {
+    const fakeData = {
+      error: false,
+      loading: false,
+      response: null
+    }
+    useAxios.mockImplementation(() => fakeData)
+    renderWithProviders(<EmailConfirmModal {...props} />)
+
+    const modalImg = screen.getByAltText('info')
+    const title = screen.getByText('modals.emailConfirm')
+
+    expect(modalImg).toBeInTheDocument()
+    expect(title).toBeInTheDocument()
+  })
+
   it('should render negative-scenario image and message (BAD_CONFIRM_TOKEN)', async () => {
     const fakeData = {
       error: { code: 'BAD_CONFIRM_TOKEN' },
