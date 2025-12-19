@@ -38,7 +38,6 @@ const SignupDialog: FC<SignupDialogProps> = ({ role }) => {
         try {
           await signupUser({
             ...data,
-            confirmPassword: data.password,
             role: role
           }).unwrap()
           closeModal()
