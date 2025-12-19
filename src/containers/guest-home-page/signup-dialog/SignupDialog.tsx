@@ -69,7 +69,7 @@ const SignupDialog: FC<SignupDialogProps> = ({ role }) => {
   return (
     <Box sx={styles.root}>
       <Box sx={styles.imgContainer}>
-        <Box alt='singup' component='img' src={image} sx={styles.img} />
+        <Box alt='signup' component='img' src={image} sx={styles.img} />
       </Box>
 
       <Box sx={styles.formContainer}>
