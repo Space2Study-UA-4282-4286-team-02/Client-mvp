@@ -44,7 +44,11 @@ describe('HowItWorksStepBlock component', () => {
       <HowItWorksStepBlock {...defaultProps} cardWidth={cardWidth} />
     )
 
-    const wrapper = container.firstChild
+    const title = screen.getByText(defaultProps.title)
+    let wrapper = title.parentElement
+    while (wrapper && wrapper.parentElement !== container) {
+      wrapper = wrapper.parentElement
+    }
 
     expect(wrapper).toHaveStyle({ maxWidth: `${cardWidth}px` })
   })
