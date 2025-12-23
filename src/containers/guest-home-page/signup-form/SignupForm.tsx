@@ -59,19 +59,20 @@ const SignupForm: FC<SignupFormProps> = ({
 
   const { authLoading } = useAppSelector((state) => state.appMain)
 
-  // for future use
-  // const isDisabled =
-  //   data.email.trim() === '' ||
-  //   data.password.trim() === '' ||
-  //   data.confirmPassword.trim() === '' ||
-  //   !data.firstName?.trim() ||
-  //   !data.lastName?.trim() ||
-  //   !data.iAgree
+  const isDisabled =
+    data.email.trim() === '' ||
+    data.password.trim() === '' ||
+    data.confirmPassword.trim() === '' ||
+    !data.firstName?.trim() ||
+    !data.lastName?.trim() ||
+    !data.iAgree ||
+    Object.values(errors).some(Boolean)
 
   return (
     <Box component='form' onSubmit={handleSubmit} sx={styles.form}>
       <Box sx={{ display: 'flex', gap: '15px', mb: '8px' }}>
         <AppTextField
+          autoComplete='given-name'
           autoFocus
           data-testid='firstName'
           errorMsg={errors.firstName ? t(errors.firstName) : undefined}
@@ -85,6 +86,7 @@ const SignupForm: FC<SignupFormProps> = ({
           value={data.firstName}
         />
         <AppTextField
+          autoComplete='family-name'
           data-testid='lastName'
           errorMsg={errors.lastName ? t(errors.lastName) : undefined}
           fullWidth
@@ -98,6 +100,7 @@ const SignupForm: FC<SignupFormProps> = ({
         />
       </Box>
       <AppTextField
+        autoComplete='email'
         data-testid={'email'}
         errorMsg={errors.email ? t(errors.email) : undefined}
         fullWidth
@@ -113,6 +116,7 @@ const SignupForm: FC<SignupFormProps> = ({
 
       <AppTextField
         InputProps={passwordVisibility}
+        autoComplete='new-password'
         data-testid='password'
         errorMsg={errors.password ? t(errors.password) : undefined}
         fullWidth
@@ -127,6 +131,7 @@ const SignupForm: FC<SignupFormProps> = ({
 
       <AppTextField
         InputProps={confirmPasswordVisibility}
+        autoComplete='new-password'
         data-testid='confirmPassword'
         errorMsg={
           errors.confirmPassword ? t(errors.confirmPassword) : undefined
@@ -188,7 +193,7 @@ const SignupForm: FC<SignupFormProps> = ({
       </Box>
 
       <AppButton
-        disabled
+        disabled={isDisabled}
         loading={authLoading}
         sx={styles.signupButton}
         type='submit'

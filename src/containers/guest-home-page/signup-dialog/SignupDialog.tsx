@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box, Typography } from '@mui/material'
 
@@ -12,13 +12,8 @@ import { useSnackBarContext } from '~/context/snackbar-context'
 import useForm from '~/hooks/use-form'
 import { useSignUpMutation } from '~/services/auth-service'
 import { UserRoleEnum } from '~/types'
-import {
-  confirmPassword,
-  email,
-  firstName,
-  lastName,
-  password
-} from '~/utils/validations/login'
+import { textField } from '~/utils/validations/common'
+import { confirmPassword, email, password } from '~/utils/validations/login'
 
 import styles from '~/containers/guest-home-page/signup-dialog/SignupDialog.styles'
 
@@ -32,35 +27,57 @@ const SignupDialog: FC<SignupDialogProps> = ({ role }) => {
   const { setAlert } = useSnackBarContext()
   const [signupUser] = useSignUpMutation()
 
-  const { handleSubmit, handleInputChange, handleBlur, data, errors } = useForm(
-    {
-      onSubmit: async () => {
-        try {
-          await signupUser({
-            ...data,
-            role: role
-          }).unwrap()
-          closeModal()
-        } catch (err) {
-          const code =
-            (err as { data?: { code?: string } })?.data?.code ?? 'unknown'
-          setAlert({
-            severity: snackbarVariants.error,
-            message: `errors.${code}`
-          })
-        }
-      },
-      initialValues: {
-        email: '',
-        password: '',
-        confirmPassword: '',
-        firstName: '',
-        lastName: '',
-        iAgree: false
-      },
-      validations: { email, firstName, lastName, password, confirmPassword }
+  const {
+    handleSubmit,
+    handleInputChange,
+    handleBlur,
+    data,
+    errors,
+    handleErrors
+  } = useForm({
+    onSubmit: async () => {
+      try {
+        await signupUser({
+          ...data,
+          role: role
+        }).unwrap()
+        closeModal()
+      } catch (err) {
+        const code =
+          (err as { data?: { code?: string } })?.data?.code ?? 'unknown'
+        setAlert({
+          severity: snackbarVariants.error,
+          message: `errors.${code}`
+        })
+      }
+    },
+    initialValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+      firstName: '',
+      lastName: '',
+      iAgree: false
+    },
+    validations: {
+      email,
+      firstName: (value: string) => textField(2, 15)(value),
+      lastName: (value: string) => textField(2, 15)(value),
+      password,
+      confirmPassword
     }
-  )
+  })
+
+  useEffect(() => {
+    if (errors.confirmPassword || errors.password) {
+      const confirmError = confirmPassword(data.confirmPassword, data)
+      if (confirmError !== errors.confirmPassword) {
+        handleErrors('confirmPassword', confirmError || '')
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.password, data.confirmPassword])
+
   const image = role === UserRoleEnum.Tutor ? tutorImg : studentImg
   const headingKey =
     role === UserRoleEnum.Tutor ? 'signup.head.tutor' : 'signup.head.student'
