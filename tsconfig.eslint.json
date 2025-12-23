@@ -3,6 +3,12 @@
   "compilerOptions": {
     "esModuleInterop": true
   },
-  "include": ["src", "vite.config.ts", "vitest.config.ts", ".eslintrc.js"],
-  "exclude": ["node_modules", "dist", "coverage", "./src/tests"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "vite.config.ts",
+    "vitest.config.ts",
+    ".eslintrc.js"
+  ],
+  "exclude": ["node_modules", "dist", "coverage"]
 }
