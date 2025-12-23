@@ -5,7 +5,6 @@ import { vi } from 'vitest'
 import { accessToken } from '~tests/unit/redux/redux.variables'
 import { UserRoleEnum } from '~/types'
 
-const mockSelector = vi.fn()
 const unwrap = vi.fn().mockResolvedValue({ accessToken })
 const signupUser = vi.fn().mockReturnValue({ unwrap })
 
@@ -17,7 +16,7 @@ vi.mock('react-redux', async () => {
   const actual = await vi.importActual('react-redux')
   return {
     ...actual,
-    useSelector: () => mockSelector.mockReturnValue(mockState)
+    useSelector: (selector) => selector(mockState)
   }
 })
 
@@ -44,6 +43,7 @@ vi.mock('~/services/auth-service', async () => {
 
 describe('Signup dialog test', () => {
   beforeEach(() => {
+    vi.clearAllMocks()
     renderWithProviders(<SignupDialog role={UserRoleEnum.Student} />)
   })
 
@@ -131,6 +131,17 @@ describe('Signup dialog test', () => {
 
     await waitFor(() => {
       expect(signupUser).toHaveBeenCalledTimes(1)
+      expect(signupUser).toHaveBeenCalledWith(
+        expect.objectContaining({
+          role: UserRoleEnum.Student,
+          email: 'test@gmail.com',
+          firstName: 'John',
+          lastName: 'Doe',
+          password: '12345678a/A',
+          confirmPassword: '12345678a/A',
+          iAgree: true
+        })
+      )
     })
   })
 })

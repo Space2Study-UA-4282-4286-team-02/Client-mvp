@@ -31,6 +31,7 @@ const handleSubmit = vi.fn()
 describe('Signup form test', () => {
   const preloadedState = { appMain: { authLoading: false } }
   beforeEach(() => {
+    vi.clearAllMocks()
     renderWithProviders(
       <SignupForm
         data={data}

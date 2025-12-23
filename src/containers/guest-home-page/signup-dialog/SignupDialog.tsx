@@ -66,7 +66,7 @@ const SignupDialog: FC<SignupDialogProps> = ({ role }) => {
         )
       } catch (err) {
         const code =
-          (err as { data?: { code?: string } })?.data?.code ?? 'unknown'
+          (err as { data?: { code?: string } })?.data?.code ?? 'UNKNOWN_ERROR'
         setAlert({
           severity: snackbarVariants.error,
           message: `errors.${code}`
@@ -88,55 +88,6 @@ const SignupDialog: FC<SignupDialogProps> = ({ role }) => {
       password,
       confirmPassword
     }
-    ////
-    // const { handleSubmit, handleInputChange, handleBlur, data, errors } = useForm(
-    //   {
-    //     onSubmit: async () => {
-    //       try {
-    //         await signupUser({
-    //           ...data,
-    //           role: role
-    //         }).unwrap()
-    //         closeModal()
-    //         setTimeout(
-    //           () =>
-    //             openModal({
-    //               component: (
-    //                 <NotificationModal
-    //                   buttonTitle={t('common.confirmButton')}
-    //                   description={
-    //                     <>
-    //                       {t('signup.confirmEmailMessage')}
-    //                       <strong>{`${data.email}`}</strong>
-    //                       {t('signup.confirmEmailDesc')}
-    //                     </>
-    //                   }
-    //                   img={imgInfo}
-    //                   onClose={closeModal}
-    //                   title={t('signup.confirmEmailTitle')}
-    //                 />
-    //               )
-    //             }),
-    //           0
-    //         )
-    //       } catch (err) {
-    //         const code =
-    //           (err as { data?: { code?: string } })?.data?.code ?? 'unknown'
-    //         setAlert({
-    //           severity: snackbarVariants.error,
-    //           message: `errors.${code}`
-    //         })
-    //       }
-    //     },
-    //     initialValues: {
-    //       email: '',
-    //       password: '',
-    //       confirmPassword: '',
-    //       firstName: '',
-    //       lastName: '',
-    //       iAgree: false
-    //     },
-    //     validations: { email, firstName, lastName, password, confirmPassword }
   })
 
   useEffect(() => {
