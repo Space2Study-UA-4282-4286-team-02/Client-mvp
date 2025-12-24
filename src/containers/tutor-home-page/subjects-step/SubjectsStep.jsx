@@ -66,10 +66,13 @@ const SubjectsStep = ({ btnsBox, stepLabel }) => {
     setError('')
   }
 
-  const handleChipDelete = (name) => {
+  const handleChipDelete = (id) => {
+    if (!id) {
+      return
+    }
     handleStepData(
       stepLabel,
-      selectedSubjects.filter((item) => item.name !== name)
+      selectedSubjects.filter((item) => item._id !== id)
     )
   }
 
@@ -78,7 +81,7 @@ const SubjectsStep = ({ btnsBox, stepLabel }) => {
       <Box sx={styles.imgContainer}>
         <Box component='img' src={img} sx={styles.img} />
       </Box>
-      <Box sx={styles.rigthBox}>
+      <Box sx={styles.rightBox}>
         <Box sx={styles.content}>
           <TitleWithDescription
             description={t('becomeTutor.categories.title')}
@@ -132,7 +135,11 @@ const SubjectsStep = ({ btnsBox, stepLabel }) => {
           {selectedSubjects.length > 0 && (
             <AppChipList
               defaultQuantity={2}
-              handleChipDelete={handleChipDelete}
+              handleChipDelete={(name) =>
+                handleChipDelete(
+                  selectedSubjects.find((item) => item.name === name)?._id
+                )
+              }
               items={selectedSubjects.map((item) => item.name)}
               wrapperStyle={styles.chipsWrapper}
             />

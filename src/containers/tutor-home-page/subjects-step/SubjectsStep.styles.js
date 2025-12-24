@@ -20,7 +20,7 @@ export const styles = {
     width: '100%',
     m: { sm: 0, xs: '0 auto' }
   },
-  rigthBox: {
+  rightBox: {
     maxWidth: '432px',
     display: 'flex',
     flexDirection: 'column',
