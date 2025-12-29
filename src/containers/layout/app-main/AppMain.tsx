@@ -17,7 +17,6 @@ const AppMain = ({
 }: {
   mainWithFooterRef: React.RefObject<HTMLDivElement>
 }) => {
-  // const mainWithFooter = useRef(null)
   const authCheckRef = useRef(false)
   const { loading } = useAppSelector((state) => state.appMain)
   const { state } = useNavigation()
