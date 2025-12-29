@@ -12,8 +12,13 @@ import { useSnackBarContext } from '~/context/snackbar-context'
 import useForm from '~/hooks/use-form'
 import { useSignUpMutation } from '~/services/auth-service'
 import { UserRoleEnum } from '~/types'
-import { textField } from '~/utils/validations/common'
-import { confirmPassword, email, password } from '~/utils/validations/login'
+import {
+  confirmPassword,
+  email,
+  firstName,
+  lastName,
+  password
+} from '~/utils/validations/login'
 
 import styles from '~/containers/guest-home-page/signup-dialog/SignupDialog.styles'
 import NotificationModal from '../notification-modal/NotificationModal'
@@ -83,8 +88,8 @@ const SignupDialog: FC<SignupDialogProps> = ({ role }) => {
     },
     validations: {
       email,
-      firstName: (value: string) => textField(2, 15)(value),
-      lastName: (value: string) => textField(2, 15)(value),
+      firstName,
+      lastName,
       password,
       confirmPassword
     }

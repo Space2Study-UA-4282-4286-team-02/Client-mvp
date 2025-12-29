@@ -7,8 +7,11 @@ interface Validations {
 
 const validations: Validations = {
   nameField: (value) => {
-    if (value.length > 30) {
-      return 'common.errorMessages.nameLength'
+    if (value.length < 2) {
+      return 'common.errorMessages.shortText'
+    }
+    if (value.length > 15) {
+      return 'common.errorMessages.longText'
     }
     if (!RegExp(/^[a-zа-яєії ]+$/i).test(value)) {
       return 'common.errorMessages.nameAlphabeticOnly'
