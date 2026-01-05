@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -8,18 +7,23 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import useBreakpoints from '~/hooks/use-breakpoints'
+import { useStepContext } from '~/context/step-context'
+import { tutorStepLabels } from '~/components/user-steps-wrapper/constants'
 
 import { LanguagesEnum } from '~/types'
 import { styles } from '~/containers/tutor-home-page/language-step/LanguageStep.styles'
 import img from '~/assets/img/tutor-home-page/become-tutor/languages.svg'
 
 const LanguageStep = ({ btnsBox }) => {
-  const [language, setLanguage] = useState('')
+  const { stepData, handleStepData } = useStepContext()
   const { isLaptopAndAbove, isMobile } = useBreakpoints()
   const { t } = useTranslation()
 
+  const languageLabel = tutorStepLabels[2]
+  const language = stepData[languageLabel] || ''
+
   const handleChange = (event) => {
-    setLanguage(event.target.value)
+    handleStepData(languageLabel, event.target.value)
   }
 
   const languages = Object.values(LanguagesEnum)
@@ -63,7 +67,7 @@ const LanguageStep = ({ btnsBox }) => {
             </InputLabel>
             <Select
               id='your-native-language'
-              label='Your native language'
+              label={t('becomeTutor.languages.autocompleteLabel')}
               labelId='your-native-language'
               onChange={handleChange}
               value={language}
