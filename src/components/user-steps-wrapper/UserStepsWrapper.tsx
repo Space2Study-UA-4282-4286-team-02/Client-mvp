@@ -39,7 +39,7 @@ const UserStepsWrapper: FC<UserStepsWrapperProps> = ({ userRole }) => {
     <AddPhotoStep key='4' />
   ]
 
-  const stepLabels = userRole === student ? [] : tutorStepLabels
+  const stepLabels = userRole === student ? '' : tutorStepLabels
 
   return (
     <StepProvider initialValues={initialValues} stepLabels={stepLabels}>
