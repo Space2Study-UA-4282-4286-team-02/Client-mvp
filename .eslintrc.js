@@ -5,12 +5,14 @@ module.exports = {
     node: true,
     'vitest-globals/env': true
   },
+
   extends: [
     'eslint:recommended',
     'plugin:prettier/recommended',
     'plugin:react/recommended',
     'plugin:vitest-globals/recommended'
   ],
+
   parserOptions: {
     ecmaFeatures: {
       jsx: true
@@ -18,35 +20,32 @@ module.exports = {
     ecmaVersion: 2021,
     sourceType: 'module'
   },
-  plugins: ['react', 'testing-library', 'react-hooks'],
+
+  plugins: ['react', 'react-hooks', 'testing-library'],
+
   settings: {
     react: {
       version: 'detect'
     }
   },
+
   rules: {
-    'prefer-arrow-callback': ['error'],
+    'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'off',
+
     'react/jsx-boolean-value': 'error',
     'react/jsx-closing-bracket-location': 'error',
     'react/jsx-equals-spacing': 'error',
     'react/jsx-first-prop-new-line': 'error',
     'react/jsx-handler-names': 'error',
     'react/jsx-key': 'error',
-    'react/react-in-jsx-scope': 'off',
     'react/jsx-pascal-case': 'error',
     'react/jsx-sort-props': 'error',
-    'react/jsx-no-useless-fragment': [
-      'error',
-      {
-        allowExpressions: true
-      }
-    ],
-    'react/jsx-max-depth': [
-      'error',
-      {
-        max: 5
-      }
-    ],
+
+    'react/jsx-no-useless-fragment': ['error', { allowExpressions: true }],
+
+    'react/jsx-max-depth': ['error', { max: 5 }],
+
     'react/jsx-wrap-multilines': [
       'error',
       {
@@ -61,8 +60,9 @@ module.exports = {
     ],
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
-    'react/prop-types': 'off'
+    'prefer-arrow-callback': 'error'
   },
+
   overrides: [
     {
       files: ['**/*.ts', '**/*.tsx'],
@@ -89,9 +89,12 @@ module.exports = {
       }
     },
     {
-      files: ['**/src/tests/**/*.*.js', '**/src/tests/**/*.js'],
-      env: {
-        jest: true
+      files: ['**/*.spec.ts', '**/*.spec.tsx'],
+      rules: {
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-explicit-any': 'off'
       }
     }
   ]
