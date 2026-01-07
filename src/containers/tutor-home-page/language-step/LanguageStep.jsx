@@ -1,42 +1,81 @@
+import { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { createFilterOptions } from '@mui/material/Autocomplete'
 
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
 import useBreakpoints from '~/hooks/use-breakpoints'
 import { useStepContext } from '~/context/step-context'
 import { tutorStepLabels } from '~/components/user-steps-wrapper/constants'
+import AppAutoComplete from '~/components/app-auto-complete/AppAutoComplete'
 
 import { LanguagesEnum } from '~/types'
 import { styles } from '~/containers/tutor-home-page/language-step/LanguageStep.styles'
 import img from '~/assets/img/tutor-home-page/become-tutor/languages.svg'
 
+const INITIAL_VISIBLE_COUNT = 6
+const LOAD_MORE_COUNT = 6
+
 const LanguageStep = ({ btnsBox }) => {
   const { stepData, handleStepData } = useStepContext()
   const { isLaptopAndAbove, isMobile } = useBreakpoints()
   const { t } = useTranslation()
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT)
 
   const languageLabel = tutorStepLabels[2]
   const language = stepData[languageLabel] || ''
 
-  const handleChange = (event) => {
-    handleStepData(languageLabel, event.target.value)
-  }
-
   const languages = Object.values(LanguagesEnum)
 
-  const languagesMenuItems = languages.map((languageValue) => {
-    const translationKey = `common.languages.${languageValue.toLowerCase()}`
+  const languageOptions = useMemo(() => {
+    return languages.map((languageValue) => {
+      const translationKey = `common.languages.${languageValue.toLowerCase()}`
+      return {
+        value: languageValue,
+        label: t(translationKey)
+      }
+    })
+  }, [languages, t])
 
-    return (
-      <MenuItem key={languageValue} value={languageValue}>
-        {t(translationKey)}
-      </MenuItem>
-    )
-  })
+  const selectedLanguage = useMemo(() => {
+    if (!language) return null
+    return languageOptions.find((option) => option.value === language) || null
+  }, [language, languageOptions])
+
+  const handleChange = (_, newValue) => {
+    handleStepData(languageLabel, newValue?.value || '')
+  }
+
+  const filterOptions = useCallback((options, state) => {
+    const defaultFilter = createFilterOptions()
+    const filtered = defaultFilter(options, state)
+    return filtered
+  }, [])
+
+  const handleListboxScroll = useCallback(
+    (event) => {
+      const listboxNode = event.currentTarget
+      const { scrollTop, scrollHeight, clientHeight } = listboxNode
+
+      if (
+        scrollHeight - scrollTop - clientHeight < 50 &&
+        visibleCount < languageOptions.length
+      ) {
+        setVisibleCount((prev) =>
+          Math.min(prev + LOAD_MORE_COUNT, languageOptions.length)
+        )
+      }
+    },
+    [visibleCount, languageOptions.length]
+  )
+
+  const visibleOptions = useMemo(() => {
+    return languageOptions.slice(0, visibleCount)
+  }, [languageOptions, visibleCount])
+
+  const handleInputChange = useCallback(() => {
+    setVisibleCount(INITIAL_VISIBLE_COUNT)
+  }, [])
 
   return (
     <Box sx={styles.container}>
@@ -61,20 +100,24 @@ const LanguageStep = ({ btnsBox }) => {
               <Box component='img' src={img} sx={styles.img} />
             </Box>
           )}
-          <FormControl sx={{ minWidth: '100%' }}>
-            <InputLabel id='your-native-language' sx={{ lineHeight: 1 }}>
-              {t('becomeTutor.languages.autocompleteLabel')}
-            </InputLabel>
-            <Select
-              id='your-native-language'
-              label={t('becomeTutor.languages.autocompleteLabel')}
-              labelId='your-native-language'
-              onChange={handleChange}
-              value={language}
-            >
-              {languagesMenuItems}
-            </Select>
-          </FormControl>
+          <AppAutoComplete
+            ListboxProps={{
+              onScroll: handleListboxScroll,
+              style: { maxHeight: 200 }
+            }}
+            filterOptions={filterOptions}
+            getOptionLabel={(option) => option.label || ''}
+            isOptionEqualToValue={(option, value) =>
+              option.value === value.value
+            }
+            onChange={handleChange}
+            onInputChange={handleInputChange}
+            options={visibleOptions}
+            textFieldProps={{
+              label: t('becomeTutor.languages.autocompleteLabel')
+            }}
+            value={selectedLanguage}
+          />
         </Box>
 
         {btnsBox}
