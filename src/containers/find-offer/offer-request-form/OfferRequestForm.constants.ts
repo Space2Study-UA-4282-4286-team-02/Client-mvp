@@ -1,6 +1,7 @@
 import leak_add from '~/assets/img/offer-page/leak_add.svg'
 import counter_1 from '~/assets/img/offer-page/counter_1.svg'
 import counter_2 from '~/assets/img/offer-page/counter_2.svg'
+import counter_3 from '~/assets/img/offer-page/counter_3.svg'
 import { SelectFieldType } from '~/types'
 import { emptyField, textField } from '~/utils/validations/common'
 import { TFunction } from 'i18next'
@@ -26,7 +27,8 @@ interface FormErrors {
 export const IMAGES = {
   leakAdd: leak_add,
   counter1: counter_1,
-  counter2: counter_2
+  counter2: counter_2,
+  counter3: counter_3
 }
 
 export const PRICE_RANGE = {
