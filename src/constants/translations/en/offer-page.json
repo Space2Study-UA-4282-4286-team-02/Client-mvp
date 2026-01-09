@@ -11,7 +11,8 @@
     "successMessage": "Great news! Your submission has been successfully added.",
     "buttonTitles": {
       "tutor": "Create offer",
-      "student": "Create request"
+      "student": "Create request",
+      "addToDrafts": "Add to Drafts"
     }
   },
   "editOffer": {
@@ -32,11 +33,11 @@
   "title": {
     "firstStep": {
       "tutor": "Pick Your Specialization",
-      "student": "Describe Your Needs"
+      "student": "Describe Your Learning Needs"
     },
     "secondStep": {
       "tutor": "Teaching parameters",
-      "student": "Preferred Parameters"
+      "student": "Preferred Teaching Parameters"
     },
     "thirdStep": "Frequently asked questions"
   },
@@ -51,7 +52,7 @@
     },
     "level": {
       "tutor": "Select the preparation levels you are comfortable teaching, from beginner to advanced or others. *",
-      "student": "Select your current skill level to match you with a tutor who can meet you where you're at and help you progress towards your goals. *"
+      "student": "Select the preparation level you want to achieve with a tutor who can meet you where you're at and help you progress towards your goals."
     },
     "describe": {
       "tutor": "Please describe any additional information about your tutoring services, your teaching style, the topics you cover, and any specific areas of expertise you have.",
@@ -77,13 +78,14 @@
       "tutor": "Describe your offer",
       "student": "Describe your request"
     },
-    "language": "Language",
+    "language": "Tutoring languages",
     "title": "Title",
     "question": "Insert Question",
     "answer": "Insert Answer"
   },
   "errorMessages": {
     "languages": "Please select at least one language.",
+    "level": "Please select a level.",
     "price": "Please specify a price.",
     "faq": "Only 5 questions are allowed to add",
     "category": "Please select a category",
