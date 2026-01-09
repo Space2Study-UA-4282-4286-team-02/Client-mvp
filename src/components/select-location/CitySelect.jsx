@@ -6,7 +6,14 @@ import { useLazyGetCitiesQuery } from '~/services/locationService'
 import { filterOptions } from '~/utils/autocompleteFilters'
 import { useTranslation } from 'react-i18next'
 
-export default function CitySelect({ countryCode, city, setCity }) {
+export default function CitySelect({
+  countryCode,
+  city,
+  setCity,
+  error,
+  helperText,
+  onBlur
+}) {
   const { t } = useTranslation()
   const [trigger, { data: cities, isLoading }] = useLazyGetCitiesQuery()
 
@@ -54,9 +61,11 @@ export default function CitySelect({ countryCode, city, setCity }) {
       renderInput={(params) => (
         <AppTextField
           {...params}
+          error={error}
           fullWidth
+          helperText={helperText}
           label='City'
-          placeholder={countryCode ? 'City' : 'Select country first'}
+          onBlur={onBlur}
           required
         />
       )}

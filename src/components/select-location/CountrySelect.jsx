@@ -6,7 +6,13 @@ import AppTextField from '~/components/app-text-field/AppTextField'
 import { styles } from './SelectLocation.styles'
 import { filterOptions } from '~/utils/autocompleteFilters'
 
-export default function CountrySelect({ setCountry, value }) {
+export default function CountrySelect({
+  setCountry,
+  value,
+  error,
+  helperText,
+  onBlur
+}) {
   const { t } = useTranslation()
   const [trigger, { data: countries, isLoading }] = useLazyGetCountriesQuery()
 
@@ -55,8 +61,11 @@ export default function CountrySelect({ setCountry, value }) {
       renderInput={(params) => (
         <AppTextField
           {...params}
+          error={error}
           fullWidth
+          helperText={helperText}
           label={t('common.labels.country')}
+          onBlur={onBlur}
           placeholder={t('common.labels.country')}
           required
         />

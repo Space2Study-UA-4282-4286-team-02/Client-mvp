@@ -11,6 +11,7 @@ import img from '~/assets/img/tutor-home-page/become-tutor/general-info.svg'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import CitySelect from '~/components/select-location/CitySelect'
 import CountrySelect from '~/components/select-location/CountrySelect'
+import * as validators from '~/utils/validations/generalInfo'
 
 const GeneralInfoStep = ({ btnsBox, isUserFetched, setIsUserFetched }) => {
   const { t } = useTranslation()
@@ -65,6 +66,33 @@ const GeneralInfoStep = ({ btnsBox, isUserFetched, setIsUserFetched }) => {
     }
   }, [user, isUserFetched, setIsUserFetched, stepData, generalInfoLabel])
 
+  const [wasFocused, setWasFocused] = useState({
+    firstName: false,
+    lastName: false,
+    country: false,
+    city: false
+  })
+
+  const handleBlur = (field) => {
+    setWasFocused((prev) => ({ ...prev, [field]: true }))
+  }
+
+  const errors = {
+    firstName: validators.firstName(firstName),
+    lastName: validators.lastName(lastName),
+    country: validators.country(country),
+    city: validators.city(city),
+    professionalSummary: validators.professionalSummary(professionalSummary)
+  }
+
+  const requiredFields = ['firstName', 'lastName', 'country', 'city']
+
+  const hasRequiredFieldsErrors = requiredFields.some(
+    (key) => errors[key] !== undefined && errors[key] !== ''
+  )
+
+  const isNextDisabled = hasRequiredFieldsErrors
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.imgContainer}>
@@ -80,16 +108,13 @@ const GeneralInfoStep = ({ btnsBox, isUserFetched, setIsUserFetched }) => {
         </Box>
         <Box sx={styles.rowContainer}>
           <AppTextField
+            FormHelperTextProps={{ sx: { minHeight: '20px', lineHeight: '1' } }}
             autoComplete='given-name'
             autoFocus
             data-testid='firstName'
-            error={firstName.length >= 30}
+            error={wasFocused.firstName && !!errors.firstName}
             fullWidth
-            helperText={
-              firstName.length >= 30
-                ? t('This field cannot be longer than 30 characters')
-                : ' '
-            }
+            helperText={(wasFocused.firstName && t(errors.firstName)) || ' '}
             inputProps={{
               maxLength: 30,
               sx: {
@@ -97,24 +122,26 @@ const GeneralInfoStep = ({ btnsBox, isUserFetched, setIsUserFetched }) => {
               }
             }}
             label={t('common.labels.firstName')}
+            onBlur={() => handleBlur('firstName')}
             onChange={(e) => {
               handleLocalChange('firstName', e.target.value)
             }}
             required
-            sx={{ flex: 1 }}
+            sx={{
+              flex: 1,
+              minWidth: 0,
+              width: '100%'
+            }}
             type='text'
             value={firstName}
           />
           <AppTextField
+            FormHelperTextProps={{ sx: { minHeight: '20px', lineHeight: '1' } }}
             autoComplete='family-name'
             data-testid='lastName'
-            error={lastName.length >= 30}
+            error={wasFocused.lastName && !!errors.lastName}
             fullWidth
-            helperText={
-              lastName.length >= 30
-                ? t('This field cannot be longer than 30 characters')
-                : ' '
-            }
+            helperText={(wasFocused.lastName && t(errors.lastName)) || ' '}
             inputProps={{
               maxLength: 30,
               sx: {
@@ -122,17 +149,29 @@ const GeneralInfoStep = ({ btnsBox, isUserFetched, setIsUserFetched }) => {
               }
             }}
             label={t('common.labels.lastName')}
+            onBlur={() => handleBlur('lastName')}
             onChange={(e) => {
               handleLocalChange('lastName', e.target.value)
             }}
             required
-            sx={{ flex: 1 }}
+            sx={{
+              flex: 1,
+              minWidth: 0,
+              width: '100%'
+            }}
             type='text'
             value={lastName}
           />
         </Box>
         <Box sx={styles.rowContainer}>
           <CountrySelect
+            error={wasFocused.country && !!errors.country}
+            helperText={
+              wasFocused.country && !country
+                ? t('common.errorMessages.emptyField')
+                : ' '
+            }
+            onBlur={() => handleBlur('country')}
             setCountry={(countryObj) =>
               handleLocalChange('country', countryObj)
             }
@@ -141,14 +180,37 @@ const GeneralInfoStep = ({ btnsBox, isUserFetched, setIsUserFetched }) => {
           <CitySelect
             city={city}
             countryCode={countryCode}
+            error={wasFocused.city && !!errors.city}
+            helperText={
+              wasFocused.city && !city
+                ? t('common.errorMessages.emptyField')
+                : ' '
+            }
+            onBlur={() => handleBlur('city')}
             setCity={(val) => {
               handleLocalChange('city', val)
             }}
           />
         </Box>
         <AppTextField
+          error={!!errors.professionalSummary}
           fullWidth
-          helperText={`${professionalSummary?.length || 0}/100`}
+          helperText={
+            <Box component='span'>
+              <span>
+                {typeof errors.professionalSummary === 'string'
+                  ? t(errors.professionalSummary)
+                  : ' '}
+              </span>
+              <span
+                style={{
+                  color: professionalSummary.length >= 100 ? 'red' : 'inherit'
+                }}
+              >
+                {`${professionalSummary.length}/100`}
+              </span>
+            </Box>
+          }
           inputProps={{ maxLength: 100, sx: { color: '#607d8b' } }}
           multiline
           onChange={(e) => {
@@ -162,7 +224,11 @@ const GeneralInfoStep = ({ btnsBox, isUserFetched, setIsUserFetched }) => {
         <Typography sx={styles.requiredInfo} variant='caption'>
           {t('becomeTutor.generalInfo.helperText')}
         </Typography>
-        {btnsBox && React.cloneElement(btnsBox, { onClick: saveDataToContext })}{' '}
+        {btnsBox &&
+          React.cloneElement(btnsBox, {
+            onClick: saveDataToContext,
+            disabled: isNextDisabled
+          })}{' '}
       </Box>
     </Box>
   )
