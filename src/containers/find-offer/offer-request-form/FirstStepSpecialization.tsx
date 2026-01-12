@@ -6,31 +6,29 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import { TFunction } from 'i18next'
 
 import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
-import { CategoryNameInterface, SubjectNameInterface } from '~/types'
+import {
+  CategoryNameInterface,
+  SubjectNameInterface,
+  ProficiencyLevelEnum
+} from '~/types'
+import { OfferFormData } from '~/types'
 import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
 import { IMAGES } from './OfferRequestForm.constants'
 import { styles } from './OfferRequestForm.styles'
 
-type FormData = {
-  category: string | null
-  subject: string | null
-  level: string
-  description: string
-  languages: string[]
-  priceRange: [number, number]
-}
-
 type Props = {
   t: TFunction
   userRole: string
-  data: FormData
-  errors: Partial<Record<keyof FormData, string>>
-  proficiencyLevels: string[]
+  data: OfferFormData
+  errors: Partial<Record<keyof OfferFormData, string>>
+  proficiencyLevels: ProficiencyLevelEnum[]
+  getProficiencyLevelTranslationKey: (level: ProficiencyLevelEnum) => string
   handleBlur: (
-    key: keyof FormData
+    key: keyof OfferFormData
   ) => (e: React.FocusEvent<HTMLInputElement>) => void
-  handleNonInputValueChange: (key: keyof FormData, value: unknown) => void
+  handleNonInputValueChange: (key: keyof OfferFormData, value: unknown) => void
+  handleErrors: (key: keyof OfferFormData, error: string) => void
   handleCategoryChange: (
     event: SyntheticEvent,
     value: CategoryNameInterface | null
@@ -49,13 +47,41 @@ export default function FirstStepSpecialization({
   data,
   errors,
   proficiencyLevels,
+  getProficiencyLevelTranslationKey,
   handleBlur,
   handleNonInputValueChange,
+  handleErrors,
   handleCategoryChange,
   handleSubjectChange,
   categoryService,
   subjectService
 }: Props) {
+  const handleProficiencyLevelChange = (
+    level: ProficiencyLevelEnum,
+    isChecked: boolean
+  ) => {
+    const currentLevels = Array.isArray(data.proficiencyLevel)
+      ? [...data.proficiencyLevel]
+      : []
+
+    if (isChecked) {
+      if (!currentLevels.includes(level)) {
+        currentLevels.push(level)
+      }
+    } else {
+      const index = currentLevels.indexOf(level)
+      if (index > -1) {
+        currentLevels.splice(index, 1)
+      }
+    }
+
+    if (currentLevels.length > 0) {
+      handleErrors('proficiencyLevel', '')
+    }
+
+    handleNonInputValueChange('proficiencyLevel', currentLevels)
+  }
+
   return (
     <Box sx={styles.section}>
       <Box sx={styles.sectionHeader}>
@@ -106,32 +132,33 @@ export default function FirstStepSpecialization({
           <Typography sx={styles.sectionDescription}>
             {t(`offerPage.description.level.${userRole}`)}
           </Typography>
-          <Box
-            onBlur={handleBlur('level')}
-            sx={{ display: 'flex', flexDirection: 'column' }}
-          >
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             {proficiencyLevels.map((level) => (
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={data.level === level}
+                    checked={(Array.isArray(data.proficiencyLevel)
+                      ? data.proficiencyLevel
+                      : []
+                    ).includes(level)}
                     onChange={(e) =>
-                      handleNonInputValueChange(
-                        'level',
-                        e.target.checked ? level : ''
-                      )
+                      handleProficiencyLevelChange(level, e.target.checked)
                     }
-                    sx={{ color: errors.level ? '#F54636' : undefined }}
+                    sx={{
+                      color: errors.proficiencyLevel ? '#F54636' : undefined
+                    }}
                   />
                 }
                 key={level}
-                label={level}
+                label={t(getProficiencyLevelTranslationKey(level))}
                 sx={styles.checkboxLabel}
               />
             ))}
           </Box>
-          {errors.level && (
-            <Typography sx={styles.errorText}>{t(errors.level)}</Typography>
+          {errors.proficiencyLevel && (
+            <Typography sx={styles.errorText}>
+              {t(errors.proficiencyLevel)}
+            </Typography>
           )}
         </Box>
       </Box>

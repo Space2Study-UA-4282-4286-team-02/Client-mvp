@@ -12,26 +12,39 @@ import { useAppSelector } from '~/hooks/use-redux'
 import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
 
-import { CategoryNameInterface, SubjectNameInterface } from '~/types'
+import {
+  CategoryNameInterface,
+  SubjectNameInterface,
+  ProficiencyLevelEnum,
+  LanguagesEnum,
+  UserRoleEnum,
+  StatusEnum,
+  UserRole,
+  OfferFormData
+} from '~/types'
 
 import { styles } from './OfferRequestForm.styles'
 import {
   IMAGES,
   PRICE_RANGE,
-  getProficiencyLevels,
-  getLanguages,
-  buildLanguageFields,
   handleLanguageSelection,
   validations,
-  isFormValid
+  isFormValid,
+  getLanguageTranslationKey,
+  getProficiencyLevelTranslationKey
 } from './OfferRequestForm.constants'
 import FirstStepSpecialization from './FirstStepSpecialization'
 import SecondStepParameters from './SecondStepParameters'
-// import ThirdStepFaq from './ThirdStepFaq'
+import ThirdStepFaq from './ThirdStepFaq'
 
 const OfferRequestForm = () => {
   const { t } = useTranslation()
-  const { userRole } = useAppSelector((state) => state.appMain)
+  const { userRole: userRoleFromRedux } = useAppSelector(
+    (state) => state.appMain
+  )
+  const userRole = userRoleFromRedux as UserRole
+
+  const [isDraft, setIsDraft] = useState(false)
 
   const {
     data,
@@ -39,61 +52,64 @@ const OfferRequestForm = () => {
     isDirty,
     handleNonInputValueChange,
     handleBlur,
-    handleSubmit
+    handleSubmit,
+    handleErrors
   } = useForm({
     initialValues: {
       category: null as string | null,
       subject: null as string | null,
-      level: '',
+      proficiencyLevel: [] as ProficiencyLevelEnum[],
       description: '',
-      languages: [] as string[],
-      priceRange: PRICE_RANGE.DEFAULT as [number, number]
-    },
-    onSubmit: async () => {
+      languages: [] as LanguagesEnum[],
+      priceRange: PRICE_RANGE.DEFAULT as [number, number],
+      ...(userRole === UserRoleEnum.Tutor && {
+        title: '',
+        price: 0,
+        FAQ: [{ question: '', answer: '' }]
+      })
+    } as OfferFormData,
+    onSubmit: async (formData?: OfferFormData) => {
+      if (!formData) return
       await new Promise((resolve) => setTimeout(resolve, 0))
-      console.log('Form submitted', data)
+      const payload = {
+        ...formData,
+        status: isDraft ? StatusEnum.Draft : StatusEnum.Pending,
+        authorRole: userRole
+      }
+      console.log('Form submitted', payload)
     },
     validations
   })
 
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false)
-  const tutorsCount = 0
-  const proficiencyLevels = getProficiencyLevels(t)
-  const languages = getLanguages(t)
-  const allLanguagesLabel = t('common.languages.allLanguages')
+
+  const proficiencyLevels = Object.values(ProficiencyLevelEnum)
+  const languages = Object.values(LanguagesEnum)
 
   const renderLanguageChips = () => (
     <Box sx={styles.chipContainer}>
-      {data.languages.includes(allLanguagesLabel) ? (
-        <AppChip
-          handleDelete={() => handleNonInputValueChange('languages', [])}
-        >
-          {allLanguagesLabel}
+      {data.languages.map((lang) => (
+        <AppChip handleDelete={() => handleRemoveLanguage(lang)} key={lang}>
+          {t(getLanguageTranslationKey(lang))}
         </AppChip>
-      ) : (
-        data.languages.map((lang) => (
-          <AppChip handleDelete={() => handleRemoveLanguage(lang)} key={lang}>
-            {lang}
-          </AppChip>
-        ))
-      )}
+      ))}
     </Box>
   )
 
   const handleLanguageChange = useCallback(
-    (newValue: string | string[]) => {
-      const selectedArray = handleLanguageSelection(newValue, allLanguagesLabel)
+    (newValue: LanguagesEnum | LanguagesEnum[]) => {
+      const selectedArray = handleLanguageSelection(newValue)
       handleNonInputValueChange('languages', selectedArray)
       setIsLanguageSelectOpen(false)
     },
-    [allLanguagesLabel, handleNonInputValueChange]
+    [handleNonInputValueChange]
   )
 
   const handleCategoryChange = useCallback(
     (event: SyntheticEvent, value: CategoryNameInterface | null) => {
       handleNonInputValueChange('category', value?._id || null)
       handleNonInputValueChange('subject', null)
-      handleNonInputValueChange('level', '')
+      handleNonInputValueChange('proficiencyLevel', [])
     },
     [handleNonInputValueChange]
   )
@@ -105,7 +121,7 @@ const OfferRequestForm = () => {
   )
 
   const handleRemoveLanguage = useCallback(
-    (langToRemove: string) =>
+    (langToRemove: LanguagesEnum) =>
       handleNonInputValueChange(
         'languages',
         data.languages.filter((l) => l !== langToRemove)
@@ -140,11 +156,13 @@ const OfferRequestForm = () => {
         categoryService={categoryService}
         data={data}
         errors={errors}
+        getProficiencyLevelTranslationKey={getProficiencyLevelTranslationKey}
         handleBlur={handleBlur}
         handleCategoryChange={handleCategoryChange}
+        handleErrors={handleErrors}
         handleNonInputValueChange={
           handleNonInputValueChange as (
-            key: keyof typeof data,
+            key: keyof OfferFormData,
             value: unknown
           ) => void
         }
@@ -157,16 +175,16 @@ const OfferRequestForm = () => {
 
       <SecondStepParameters
         PRICE_RANGE={PRICE_RANGE}
-        buildLanguageFields={buildLanguageFields}
         data={data}
         errors={errors}
+        getLanguageTranslationKey={getLanguageTranslationKey}
         handleBlur={handleBlur}
         handleLanguageChange={handleLanguageChange}
         handleLanguageSelectClose={handleLanguageSelectClose}
         handleLanguageSelectOpen={handleLanguageSelectOpen}
         handleNonInputValueChange={
           handleNonInputValueChange as (
-            key: keyof typeof data,
+            key: keyof OfferFormData,
             value: unknown
           ) => void
         }
@@ -174,29 +192,36 @@ const OfferRequestForm = () => {
         languages={languages}
         renderLanguageChips={renderLanguageChips}
         t={t}
-        tutorsCount={tutorsCount}
         userRole={userRole}
       />
 
-      {/* {String(userRole) === 'tutor' && (
+      {userRole === UserRoleEnum.Tutor && (
         <ThirdStepFaq
+          data={data}
           errors={errors}
           handleBlur={handleBlur}
+          handleErrors={handleErrors}
+          handleNonInputValueChange={
+            handleNonInputValueChange as (
+              key: keyof OfferFormData,
+              value: unknown
+            ) => void
+          }
           t={t}
           userRole={userRole}
         />
-      )} */}
+      )}
 
       {/* Footer */}
       <Box sx={styles.footer}>
         <AppButton
-          disabled={!isFormValid(data, errors, isDirty)}
+          disabled={!isFormValid(data, errors, isDirty, userRole)}
           fullWidth
           type='submit'
         >
           {t(`offerPage.createOffer.buttonTitles.${userRole}`)}
         </AppButton>
-        <AppButton fullWidth variant='outlined'>
+        <AppButton fullWidth onClick={() => setIsDraft(true)} variant='tonal'>
           {t(`offerPage.createOffer.buttonTitles.addToDrafts`)}
         </AppButton>
       </Box>

@@ -2,26 +2,26 @@ import leak_add from '~/assets/img/offer-page/leak_add.svg'
 import counter_1 from '~/assets/img/offer-page/counter_1.svg'
 import counter_2 from '~/assets/img/offer-page/counter_2.svg'
 import counter_3 from '~/assets/img/offer-page/counter_3.svg'
-import { SelectFieldType } from '~/types'
+import {
+  ProficiencyLevelEnum,
+  LanguagesEnum,
+  UserRoleEnum,
+  Faq,
+  UserRole,
+  OfferFormData
+} from '~/types'
 import { emptyField, textField } from '~/utils/validations/common'
-import { TFunction } from 'i18next'
 
-interface FormData {
-  category: string | null
-  subject: string | null
-  level: string
-  description: string
-  languages: string[]
-  priceRange: [number, number]
-}
-
-interface FormErrors {
+interface OfferFormErrors {
   category?: string
   subject?: string
-  level?: string
+  proficiencyLevel?: string
   description?: string
   languages?: string
   priceRange?: string
+  price?: string
+  title?: string
+  FAQ?: string
 }
 
 export const IMAGES = {
@@ -41,64 +41,60 @@ export const DESCRIPTION = {
   MAX_LENGTH: 2000
 }
 
-export const getProficiencyLevels = (
-  t: TFunction<'translation', undefined>
-): string[] => [
-  t('common.levels.beginner'),
-  t('common.levels.intermediate'),
-  t('common.levels.advanced'),
-  t('common.levels.test preparation'),
-  t('common.levels.professional')
-]
+export const getLanguageTranslationKey = (lang: LanguagesEnum): string => {
+  const keyMap: Record<LanguagesEnum, string> = {
+    [LanguagesEnum.English]: 'common.languages.english',
+    [LanguagesEnum.Ukrainian]: 'common.languages.ukrainian',
+    [LanguagesEnum.Polish]: 'common.languages.polish',
+    [LanguagesEnum.German]: 'common.languages.german',
+    [LanguagesEnum.French]: 'common.languages.french',
+    [LanguagesEnum.Spanish]: 'common.languages.spanish',
+    [LanguagesEnum.Arabic]: 'common.languages.arabic'
+  }
+  return keyMap[lang]
+}
 
-export const getLanguages = (
-  t: TFunction<'translation', undefined>
-): string[] => [
-  t('common.languages.allLanguages'),
-  t('common.languages.english'),
-  t('common.languages.ukrainian'),
-  t('common.languages.polish'),
-  t('common.languages.german'),
-  t('common.languages.french'),
-  t('common.languages.spanish'),
-  t('common.languages.arabic')
-]
-
-export const buildLanguageFields = (
-  languages: string[]
-): SelectFieldType<string>[] =>
-  languages.map((lang) => ({
-    value: lang,
-    title: lang
-  }))
+export const getProficiencyLevelTranslationKey = (
+  level: ProficiencyLevelEnum
+): string => {
+  const keyMap: Record<ProficiencyLevelEnum, string> = {
+    [ProficiencyLevelEnum.Beginner]: 'common.levels.beginner',
+    [ProficiencyLevelEnum.Intermediate]: 'common.levels.intermediate',
+    [ProficiencyLevelEnum.Advanced]: 'common.levels.advanced',
+    [ProficiencyLevelEnum.TestPreparation]: 'common.levels.test preparation',
+    [ProficiencyLevelEnum.Professional]: 'common.levels.professional',
+    [ProficiencyLevelEnum.Specialized]: 'common.levels.specialized'
+  }
+  return keyMap[level]
+}
 
 export const handleLanguageSelection = (
-  newValue: string | string[],
-  allLanguagesLabel: string
-): string[] => {
+  newValue: LanguagesEnum | LanguagesEnum[]
+): LanguagesEnum[] => {
   const selectedArray = Array.isArray(newValue) ? newValue : [newValue]
-
-  if (selectedArray.includes(allLanguagesLabel)) {
-    return [allLanguagesLabel]
-  }
-
   return selectedArray
 }
 
 export const isFormValid = (
-  data: FormData,
-  errors: FormErrors,
-  isDirty: boolean
+  data: OfferFormData,
+  errors: OfferFormErrors,
+  isDirty: boolean,
+  userRole: UserRole
 ): boolean => {
-  return (
+  const baseValid =
     isDirty &&
     !!data.category &&
     !!data.subject &&
-    !!data.level &&
+    data.proficiencyLevel.length > 0 &&
     data.description.trim() !== '' &&
     data.languages.length > 0 &&
     Object.values(errors).every((e) => !e)
-  )
+
+  if (userRole === UserRoleEnum.Tutor) {
+    return baseValid && !!data.title && !!(data.FAQ && data.FAQ.length > 0)
+  }
+
+  return baseValid
 }
 
 export const validations = {
@@ -106,21 +102,35 @@ export const validations = {
     emptyField(value, 'offerPage.errorMessages.category'),
   subject: (value: string | null) =>
     emptyField(value, 'offerPage.errorMessages.subject'),
-  level: (value: string) => emptyField(value, 'offerPage.errorMessages.level'),
+  proficiencyLevel: (value: ProficiencyLevelEnum[] | string) => {
+    const arr = Array.isArray(value) ? value : []
+    return arr.length > 0 ? '' : 'offerPage.errorMessages.level'
+  },
   description: (value: string) =>
     emptyField(
       value,
       'offerPage.errorMessages.description',
       textField(10, 2000)(value)
     ),
-  languages: (value: string | string[]) => {
+  languages: (value: LanguagesEnum[] | string) => {
     const arr = Array.isArray(value) ? value : []
-    return arr && arr.length > 0 ? '' : 'offerPage.errorMessages.languages'
+    return arr.length > 0 ? '' : 'offerPage.errorMessages.languages'
   },
-  priceRange: (value: string | [number, number]) => {
+  priceRange: (value: [number, number] | string) => {
     const range = Array.isArray(value) ? value : PRICE_RANGE.DEFAULT
-    return range && range[0] >= 150 && range[1] <= 3500
+    return range && range[0] >= PRICE_RANGE.MIN && range[1] <= PRICE_RANGE.MAX
       ? ''
       : 'offerPage.errorMessages.price'
+  },
+  price: (value: number | string | undefined) => {
+    const num =
+      typeof value === 'number' ? value : parseInt(value as string, 10)
+    return num > 0 ? '' : 'offerPage.errorMessages.price'
+  },
+  title: (value: string | undefined) =>
+    emptyField(value as string | null, 'offerPage.errorMessages.title'),
+  FAQ: (value: Faq[] | undefined | string) => {
+    const arr = Array.isArray(value) ? value : []
+    return arr.length > 0 ? '' : 'offerPage.errorMessages.faq'
   }
 }

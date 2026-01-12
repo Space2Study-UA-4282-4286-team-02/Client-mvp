@@ -12,7 +12,8 @@
     "buttonTitles": {
       "tutor": "Create offer",
       "student": "Create request",
-      "addToDrafts": "Add to Drafts"
+      "addToDrafts": "Add to Drafts",
+      "addQuestion": "Add one more question"
     }
   },
   "editOffer": {
@@ -90,6 +91,7 @@
     "faq": "Only 5 questions are allowed to add",
     "category": "Please select a category",
     "subject": "Please select a subject",
-    "description": "Please provide a description"
+    "description": "Please provide a description",
+    "title": "Please provide a title"
   }
 }
