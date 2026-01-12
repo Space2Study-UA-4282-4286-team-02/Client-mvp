@@ -88,6 +88,7 @@ export const style = {
     fontSize: { xs: '16px', sm: '18px', md: '18px' }
   },
   btnsBox: {
-    mt: 'auto'
+    mt: 'auto',
+    order: { xs: 3 }
   }
 }

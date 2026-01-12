@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Typography, useMediaQuery, useTheme } from '@mui/material'
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
 import { useTranslation } from 'react-i18next'
 
@@ -8,6 +8,8 @@ import { validationData } from '~/containers/tutor-home-page/add-photo-step/cons
 
 const AddPhotoStep = ({ btnsBox }) => {
   const { t } = useTranslation()
+  const theme = useTheme()
+  const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('md'))
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState('')
   const [error, setError] = useState('')
@@ -129,8 +131,9 @@ const AddPhotoStep = ({ btnsBox }) => {
             {error}
           </Typography>
         )}
-        <Box sx={style.btnsBox}>{btnsBox}</Box>
+        {!isMobileOrTablet && <Box sx={style.btnsBox}>{btnsBox}</Box>}
       </Box>
+      {isMobileOrTablet && <Box sx={style.btnsBox}>{btnsBox}</Box>}
     </Box>
   )
 }
