@@ -42,12 +42,14 @@
     "rating": "Rating",
     "priceAsc": "Price low-high",
     "priceDesc": "Price high-low",
-    "name":"Name"
+    "name": "Name"
   },
-  "notFound":{
-    "description": "We couldn’t find what you were searching for."
+  "notFound": {
+    "title": "Sorry, no results found",
+    "description": "We couldn’t find what you were searching for. Please try again or suggest a new category that you were looking for.",
+    "button": "Request a new category"
   },
-  "otherOffers":{
-    "title":"Other offers"
+  "otherOffers": {
+    "title": "Other offers"
   }
 }
