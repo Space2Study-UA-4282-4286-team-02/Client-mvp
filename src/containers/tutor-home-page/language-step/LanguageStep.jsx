@@ -48,8 +48,7 @@ const LanguageStep = ({ btnsBox }) => {
 
   const filterOptions = useCallback((options, state) => {
     const defaultFilter = createFilterOptions()
-    const filtered = defaultFilter(options, state)
-    return filtered
+    return defaultFilter(options, state)
   }, [])
 
   const handleListboxScroll = useCallback(
