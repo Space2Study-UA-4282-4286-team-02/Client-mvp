@@ -118,7 +118,6 @@ const LanguageStep = ({ btnsBox }) => {
             value={selectedLanguage}
           />
         </Box>
-
         {btnsBox}
       </Box>
     </Box>
