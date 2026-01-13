@@ -99,7 +99,7 @@ const SecondStepParameters = ({
         </Typography>
       </Box>
 
-      <Box sx={styles.sectionContentSecond}>
+      <Box sx={styles.sectionContentCompact}>
         {userRole === UserRoleEnum.Tutor && (
           <Box sx={styles.fieldRow}>
             <Typography sx={styles.sectionDescription}>
@@ -134,7 +134,7 @@ const SecondStepParameters = ({
           />
         </Box>
 
-        <Box sx={styles.fieldRow}>
+        <Box sx={styles.fieldRowCompact}>
           <Typography sx={styles.sectionDescription}>
             {t(`offerPage.description.languages.${userRole}`)}
           </Typography>
@@ -168,14 +168,7 @@ const SecondStepParameters = ({
             />
           )}
           {userRole === UserRoleEnum.Tutor && (
-            <Box
-              sx={{
-                display: 'flex',
-                gap: '16px',
-                alignItems: 'flex-start',
-                width: '200px'
-              }}
-            >
+            <Box sx={styles.priceInputWrapper}>
               <AppTextField
                 errorMsg={errors.price ? t(errors.price) : undefined}
                 fullWidth

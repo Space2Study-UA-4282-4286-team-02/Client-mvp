@@ -80,8 +80,8 @@ const ThirdStepFaq = ({
         </Typography>
 
         {faqList.map((faq: Faq, index: number) => (
-          <Box key={index} sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Box>
+          <Box key={index} sx={styles.faqItemContainer}>
+            <Box sx={styles.faqFieldsWrapper}>
               <AppTextField
                 errorMsg={errors.FAQ ? t(errors.FAQ) : undefined}
                 fullWidth
@@ -104,11 +104,9 @@ const ThirdStepFaq = ({
                 value={faq.answer}
               />
             </Box>
-            <Box>
-              <IconButton onClick={() => handleRemoveFaq(index)} size='small'>
-                <CloseRounded fontSize='small' />
-              </IconButton>
-            </Box>
+            <IconButton onClick={() => handleRemoveFaq(index)} size='small'>
+              <CloseRounded fontSize='small' />
+            </IconButton>
           </Box>
         ))}
 
@@ -116,7 +114,7 @@ const ThirdStepFaq = ({
           <Typography sx={styles.errorText}>{t(errors.FAQ)}</Typography>
         )}
 
-        <Button onClick={handleAddFaq} variant='tonal'>
+        <Button onClick={handleAddFaq} sx={{ width: '50%' }} variant='tonal'>
           {t('offerPage.createOffer.buttonTitles.addQuestion')}
         </Button>
       </Box>

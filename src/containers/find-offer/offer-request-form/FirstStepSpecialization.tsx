@@ -55,6 +55,7 @@ const FirstStepSpecialization = ({
   subjectService
 }: Props) => {
   const proficiencyLevels = Object.values(ProficiencyLevelEnum)
+
   const handleProficiencyLevelChange = (
     level: ProficiencyLevelEnum,
     isChecked: boolean
@@ -76,6 +77,8 @@ const FirstStepSpecialization = ({
 
     if (currentLevels.length > 0) {
       handleErrors('proficiencyLevel', '')
+    } else {
+      handleErrors('proficiencyLevel', 'offerPage.errorMessages.level')
     }
 
     handleNonInputValueChange('proficiencyLevel', currentLevels)
@@ -91,43 +94,46 @@ const FirstStepSpecialization = ({
       </Box>
 
       <Box sx={styles.sectionContent}>
-        <Typography sx={styles.sectionDescription}>
-          {t(`offerPage.description.category.${userRole}`)}
-        </Typography>
+        <Box sx={styles.fieldRow}>
+          <Typography sx={styles.sectionDescription}>
+            {t(`offerPage.description.category.${userRole}`)}
+          </Typography>
 
-        <AsyncAutocomplete
-          labelField='name'
-          onBlur={handleBlur('category')}
-          onChange={handleCategoryChange}
-          service={categoryService.getCategoriesNames}
-          textFieldProps={{
-            label: t('offerPage.labels.category'),
-            error: Boolean(errors.category),
-            helperText: errors.category ? t(errors.category) : undefined
-          }}
-          value={data.category}
-          valueField='_id'
-        />
+          <AsyncAutocomplete
+            labelField='name'
+            onBlur={handleBlur('category')}
+            onChange={handleCategoryChange}
+            service={categoryService.getCategoriesNames}
+            textFieldProps={{
+              label: t('offerPage.labels.category'),
+              error: Boolean(errors.category),
+              helperText: errors.category ? t(errors.category) : undefined
+            }}
+            value={data.category}
+            valueField='_id'
+          />
+        </Box>
+        <Box sx={styles.fieldRow}>
+          <AsyncAutocomplete
+            disabled={!data.category}
+            fetchCondition={Boolean(data.category)}
+            labelField='name'
+            onBlur={handleBlur('subject')}
+            onChange={handleSubjectChange}
+            service={() =>
+              subjectService.getSubjectsNames(data.category as string)
+            }
+            textFieldProps={{
+              label: t('offerPage.labels.subject'),
+              error: Boolean(errors.subject),
+              helperText: errors.subject ? t(errors.subject) : undefined
+            }}
+            value={data.subject}
+            valueField='_id'
+          />
+        </Box>
 
-        <AsyncAutocomplete
-          disabled={!data.category}
-          fetchCondition={Boolean(data.category)}
-          labelField='name'
-          onBlur={handleBlur('subject')}
-          onChange={handleSubjectChange}
-          service={() =>
-            subjectService.getSubjectsNames(data.category as string)
-          }
-          textFieldProps={{
-            label: t('offerPage.labels.subject'),
-            error: Boolean(errors.subject),
-            helperText: errors.subject ? t(errors.subject) : undefined
-          }}
-          value={data.subject}
-          valueField='_id'
-        />
-
-        <Box>
+        <Box sx={styles.fieldRow}>
           <Typography sx={styles.sectionDescription}>
             {t(`offerPage.description.level.${userRole}`)}
           </Typography>

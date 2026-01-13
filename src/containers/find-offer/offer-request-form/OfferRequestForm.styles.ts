@@ -41,7 +41,7 @@ export const styles = {
     gap: '12px',
     pl: '34px'
   },
-  sectionContentSecond: {
+  sectionContentCompact: {
     display: 'flex',
     flexDirection: 'column',
     gap: '0',
@@ -51,6 +51,18 @@ export const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '6px'
+  },
+  fieldRowCompact: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+    mb: '12px'
+  },
+  priceInputWrapper: {
+    display: 'flex',
+    gap: '16px',
+    alignItems: 'flex-start',
+    width: '200px'
   },
   sectionDescription: {
     color: 'primary.500',
@@ -75,8 +87,19 @@ export const styles = {
     display: 'flex',
     gap: '8px',
     flexWrap: 'wrap',
-    mt: '-12px',
-    mb: '12px'
+    mt: '-12px'
+  },
+  faqItemContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '12px',
+    alignItems: 'flex-start'
+  },
+  faqFieldsWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+    flex: 1
   },
   footer: {
     display: 'flex',
