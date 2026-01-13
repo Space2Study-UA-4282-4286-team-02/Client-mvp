@@ -24,7 +24,7 @@ export const styles = {
   section: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px'
+    gap: '12px'
   },
   sectionHeader: {
     display: 'flex',
@@ -38,8 +38,19 @@ export const styles = {
   sectionContent: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px',
-    pl: '44px'
+    gap: '12px',
+    pl: '34px'
+  },
+  sectionContentSecond: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0',
+    pl: '34px'
+  },
+  fieldRow: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px'
   },
   sectionDescription: {
     color: 'primary.500',
@@ -64,7 +75,8 @@ export const styles = {
     display: 'flex',
     gap: '8px',
     flexWrap: 'wrap',
-    mt: '8px'
+    mt: '-12px',
+    mb: '12px'
   },
   footer: {
     display: 'flex',

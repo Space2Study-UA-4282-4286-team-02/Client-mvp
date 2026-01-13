@@ -24,7 +24,7 @@ type Props = {
   handleErrors: (key: keyof OfferFormData, error: string) => void
 }
 
-export default function ThirdStepFaq({
+const ThirdStepFaq = ({
   t,
   userRole,
   data,
@@ -32,7 +32,7 @@ export default function ThirdStepFaq({
   handleBlur,
   handleNonInputValueChange,
   handleErrors
-}: Props) {
+}: Props) => {
   const faqList = data.FAQ || []
 
   const handleAddFaq = () => {
@@ -123,3 +123,5 @@ export default function ThirdStepFaq({
     </Box>
   )
 }
+
+export default ThirdStepFaq

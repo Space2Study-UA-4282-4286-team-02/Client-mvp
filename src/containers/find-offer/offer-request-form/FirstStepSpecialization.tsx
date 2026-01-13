@@ -22,7 +22,6 @@ type Props = {
   userRole: string
   data: OfferFormData
   errors: Partial<Record<keyof OfferFormData, string>>
-  proficiencyLevels: ProficiencyLevelEnum[]
   getProficiencyLevelTranslationKey: (level: ProficiencyLevelEnum) => string
   handleBlur: (
     key: keyof OfferFormData
@@ -41,12 +40,11 @@ type Props = {
   subjectService: typeof subjectService
 }
 
-export default function FirstStepSpecialization({
+const FirstStepSpecialization = ({
   t,
   userRole,
   data,
   errors,
-  proficiencyLevels,
   getProficiencyLevelTranslationKey,
   handleBlur,
   handleNonInputValueChange,
@@ -55,7 +53,8 @@ export default function FirstStepSpecialization({
   handleSubjectChange,
   categoryService,
   subjectService
-}: Props) {
+}: Props) => {
+  const proficiencyLevels = Object.values(ProficiencyLevelEnum)
   const handleProficiencyLevelChange = (
     level: ProficiencyLevelEnum,
     isChecked: boolean
@@ -165,3 +164,5 @@ export default function FirstStepSpecialization({
     </Box>
   )
 }
+
+export default FirstStepSpecialization

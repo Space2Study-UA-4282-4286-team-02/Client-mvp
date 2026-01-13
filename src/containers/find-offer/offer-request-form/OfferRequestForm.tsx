@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import AppButton from '~/components/app-button/AppButton'
-import AppChip from '~/components/app-chip/AppChip'
 
 import useForm from '~/hooks/use-form'
 import { useAppSelector } from '~/hooks/use-redux'
@@ -27,10 +26,8 @@ import { styles } from './OfferRequestForm.styles'
 import {
   IMAGES,
   PRICE_RANGE,
-  handleLanguageSelection,
   validations,
   isFormValid,
-  getLanguageTranslationKey,
   getProficiencyLevelTranslationKey
 } from './OfferRequestForm.constants'
 import FirstStepSpecialization from './FirstStepSpecialization'
@@ -81,30 +78,6 @@ const OfferRequestForm = () => {
     validations
   })
 
-  const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false)
-
-  const proficiencyLevels = Object.values(ProficiencyLevelEnum)
-  const languages = Object.values(LanguagesEnum)
-
-  const renderLanguageChips = () => (
-    <Box sx={styles.chipContainer}>
-      {data.languages.map((lang) => (
-        <AppChip handleDelete={() => handleRemoveLanguage(lang)} key={lang}>
-          {t(getLanguageTranslationKey(lang))}
-        </AppChip>
-      ))}
-    </Box>
-  )
-
-  const handleLanguageChange = useCallback(
-    (newValue: LanguagesEnum | LanguagesEnum[]) => {
-      const selectedArray = handleLanguageSelection(newValue)
-      handleNonInputValueChange('languages', selectedArray)
-      setIsLanguageSelectOpen(false)
-    },
-    [handleNonInputValueChange]
-  )
-
   const handleCategoryChange = useCallback(
     (event: SyntheticEvent, value: CategoryNameInterface | null) => {
       handleNonInputValueChange('category', value?._id || null)
@@ -127,16 +100,6 @@ const OfferRequestForm = () => {
         data.languages.filter((l) => l !== langToRemove)
       ),
     [data.languages, handleNonInputValueChange]
-  )
-
-  const handleLanguageSelectOpen = useCallback(
-    () => setIsLanguageSelectOpen(true),
-    []
-  )
-
-  const handleLanguageSelectClose = useCallback(
-    () => setIsLanguageSelectOpen(false),
-    []
   )
 
   return (
@@ -167,7 +130,6 @@ const OfferRequestForm = () => {
           ) => void
         }
         handleSubjectChange={handleSubjectChange}
-        proficiencyLevels={proficiencyLevels}
         subjectService={subjectService}
         t={t}
         userRole={userRole}
@@ -177,20 +139,14 @@ const OfferRequestForm = () => {
         PRICE_RANGE={PRICE_RANGE}
         data={data}
         errors={errors}
-        getLanguageTranslationKey={getLanguageTranslationKey}
         handleBlur={handleBlur}
-        handleLanguageChange={handleLanguageChange}
-        handleLanguageSelectClose={handleLanguageSelectClose}
-        handleLanguageSelectOpen={handleLanguageSelectOpen}
         handleNonInputValueChange={
           handleNonInputValueChange as (
             key: keyof OfferFormData,
             value: unknown
           ) => void
         }
-        isLanguageSelectOpen={isLanguageSelectOpen}
-        languages={languages}
-        renderLanguageChips={renderLanguageChips}
+        handleRemoveLanguage={handleRemoveLanguage}
         t={t}
         userRole={userRole}
       />

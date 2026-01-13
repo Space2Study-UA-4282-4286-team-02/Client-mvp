@@ -1,15 +1,18 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { TFunction } from 'i18next'
+import { useState, useCallback } from 'react'
 
 import AppTextArea from '~/components/app-text-area/AppTextArea'
 import AppSelect from '~/components/app-select/AppSelect'
 import AppRange from '~/components/app-range/AppRange'
+import AppChip from '~/components/app-chip/AppChip'
 
 import {
   IMAGES,
   PRICE_RANGE as PRICE_RANGE_CONST,
-  getLanguageTranslationKey
+  getLanguageTranslationKey,
+  handleLanguageSelection
 } from './OfferRequestForm.constants'
 import {
   SelectFieldType,
@@ -29,18 +32,12 @@ type Props = {
   userRole: UserRoleEnum
   data: OfferFormData
   errors: Partial<Record<keyof OfferFormData, string>>
-  languages: LanguagesEnum[]
-  isLanguageSelectOpen: boolean
-  handleLanguageSelectClose: () => void
-  handleLanguageSelectOpen: () => void
-  handleLanguageChange: (v: LanguagesEnum | LanguagesEnum[]) => void
-  renderLanguageChips: () => JSX.Element
+  handleRemoveLanguage: (lang: LanguagesEnum) => void
   handleNonInputValueChange: (key: keyof OfferFormData, value: unknown) => void
   handleBlur: (
     key: keyof OfferFormData
   ) => (e: React.FocusEvent<HTMLInputElement>) => void
   PRICE_RANGE?: PriceRangeType
-  getLanguageTranslationKey: (lang: LanguagesEnum) => string
 }
 
 const buildLanguageFields = (
@@ -52,21 +49,47 @@ const buildLanguageFields = (
     title: t(getLanguageTranslationKey(lang))
   }))
 
-export default function SecondStepParameters({
+const SecondStepParameters = ({
   t,
   userRole,
   data,
   errors,
-  languages,
-  isLanguageSelectOpen,
-  handleLanguageSelectClose,
-  handleLanguageSelectOpen,
-  handleLanguageChange,
-  renderLanguageChips,
+  handleRemoveLanguage,
   handleNonInputValueChange,
   handleBlur,
   PRICE_RANGE
-}: Props) {
+}: Props) => {
+  const languages = Object.values(LanguagesEnum)
+  const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false)
+
+  const handleLanguageSelectOpen = useCallback(
+    () => setIsLanguageSelectOpen(true),
+    []
+  )
+
+  const handleLanguageSelectClose = useCallback(
+    () => setIsLanguageSelectOpen(false),
+    []
+  )
+
+  const handleLanguageChange = useCallback(
+    (newValue: LanguagesEnum | LanguagesEnum[]) => {
+      const selectedArray = handleLanguageSelection(newValue)
+      handleNonInputValueChange('languages', selectedArray)
+      setIsLanguageSelectOpen(false)
+    },
+    [handleNonInputValueChange]
+  )
+
+  const renderLanguageChips = () => (
+    <Box sx={styles.chipContainer}>
+      {data.languages.map((lang) => (
+        <AppChip handleDelete={() => handleRemoveLanguage(lang)} key={lang}>
+          {t(getLanguageTranslationKey(lang))}
+        </AppChip>
+      ))}
+    </Box>
+  )
   return (
     <Box sx={styles.section}>
       <Box sx={styles.sectionHeader}>
@@ -76,9 +99,9 @@ export default function SecondStepParameters({
         </Typography>
       </Box>
 
-      <Box sx={styles.sectionContent}>
+      <Box sx={styles.sectionContentSecond}>
         {userRole === UserRoleEnum.Tutor && (
-          <Box>
+          <Box sx={styles.fieldRow}>
             <Typography sx={styles.sectionDescription}>
               {t(`offerPage.description.title.${userRole}`)}
             </Typography>
@@ -94,7 +117,7 @@ export default function SecondStepParameters({
             />
           </Box>
         )}
-        <Box>
+        <Box sx={styles.fieldRow}>
           <Typography sx={styles.sectionDescription}>
             {t(`offerPage.description.describe.${userRole}`)}
           </Typography>
@@ -107,17 +130,16 @@ export default function SecondStepParameters({
               handleNonInputValueChange('description', e.target.value)
             }
             placeholder={t(`offerPage.labels.describe.${userRole}`)}
-            sx={{ mt: '6px' }}
             value={data.description}
           />
         </Box>
 
-        <Box>
+        <Box sx={styles.fieldRow}>
           <Typography sx={styles.sectionDescription}>
             {t(`offerPage.description.languages.${userRole}`)}
           </Typography>
           <AppSelect
-            error={Boolean(errors.languages)}
+            errorMsg={errors.languages ? t(errors.languages) : undefined}
             fields={buildLanguageFields(languages, t)}
             label={t('offerPage.labels.language')}
             multiple
@@ -126,16 +148,12 @@ export default function SecondStepParameters({
             onOpen={handleLanguageSelectOpen}
             open={isLanguageSelectOpen}
             setValue={handleLanguageChange}
-            sx={{ mt: '6px' }}
             value={data.languages}
           />
-          {errors.languages && (
-            <Typography sx={styles.errorText}>{t(errors.languages)}</Typography>
-          )}
           {data.languages.length > 0 && renderLanguageChips()}
         </Box>
 
-        <Box>
+        <Box sx={styles.fieldRow}>
           <Typography sx={styles.sectionDescription}>
             {t(`offerPage.description.price.${userRole}`)}
           </Typography>
@@ -151,23 +169,26 @@ export default function SecondStepParameters({
           )}
           {userRole === UserRoleEnum.Tutor && (
             <Box
-              sx={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}
+              sx={{
+                display: 'flex',
+                gap: '16px',
+                alignItems: 'flex-start',
+                width: '200px'
+              }}
             >
-              <Box sx={{ width: '200px' }}>
-                <AppTextField
-                  errorMsg={errors.price ? t(errors.price) : undefined}
-                  fullWidth
-                  onBlur={handleBlur('price')}
-                  onChange={(e) => {
-                    const value = e.target.value
-                      ? parseInt(e.target.value, 10)
-                      : 0
-                    handleNonInputValueChange('price', value)
-                  }}
-                  type='number'
-                  value={data.price || ''}
-                />
-              </Box>
+              <AppTextField
+                errorMsg={errors.price ? t(errors.price) : undefined}
+                fullWidth
+                onBlur={handleBlur('price')}
+                onChange={(e) => {
+                  const value = e.target.value
+                    ? parseInt(e.target.value, 10)
+                    : 0
+                  handleNonInputValueChange('price', value)
+                }}
+                type='number'
+                value={data.price || ''}
+              />
             </Box>
           )}
           {errors.priceRange && (
@@ -183,7 +204,7 @@ export default function SecondStepParameters({
         </Box>
 
         {userRole === UserRoleEnum.Tutor && (
-          <Box>
+          <Box sx={styles.fieldRow}>
             <Typography sx={styles.sectionDescription}>
               Link your created course to the offer.
             </Typography>
@@ -191,7 +212,6 @@ export default function SecondStepParameters({
               fields={[{ value: '', title: 'Course 1' }]}
               label={'Select a course'}
               setValue={() => {}}
-              sx={{ mt: '6px' }}
               value=''
             />
           </Box>
@@ -200,3 +220,5 @@ export default function SecondStepParameters({
     </Box>
   )
 }
+
+export default SecondStepParameters
