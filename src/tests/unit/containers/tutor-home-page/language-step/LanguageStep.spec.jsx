@@ -38,7 +38,7 @@ describe('LanguageStep component', () => {
     it('should render the component with title', () => {
       renderComponent()
 
-      const title = screen.getByText('becomeTutor.languages.title')
+      const title = screen.getByText('becomeTutor.language.title')
       expect(title).toBeInTheDocument()
     })
 
@@ -93,7 +93,7 @@ describe('LanguageStep component', () => {
       renderComponent()
 
       const autocomplete = screen.getByLabelText(
-        'becomeTutor.languages.autocompleteLabel'
+        'becomeTutor.language.autocompleteLabel'
       )
 
       fireEvent.mouseDown(autocomplete)
@@ -108,7 +108,7 @@ describe('LanguageStep component', () => {
       renderComponent()
 
       const autocomplete = screen.getByLabelText(
-        'becomeTutor.languages.autocompleteLabel'
+        'becomeTutor.language.autocompleteLabel'
       )
 
       fireEvent.mouseDown(autocomplete)
@@ -129,7 +129,7 @@ describe('LanguageStep component', () => {
       })
 
       const autocomplete = screen.getByLabelText(
-        'becomeTutor.languages.autocompleteLabel'
+        'becomeTutor.language.autocompleteLabel'
       )
       expect(autocomplete).toBeInTheDocument()
     })
@@ -140,7 +140,7 @@ describe('LanguageStep component', () => {
       renderComponent()
 
       const autocomplete = screen.getByLabelText(
-        'becomeTutor.languages.autocompleteLabel'
+        'becomeTutor.language.autocompleteLabel'
       )
 
       fireEvent.mouseDown(autocomplete)
@@ -155,7 +155,7 @@ describe('LanguageStep component', () => {
       renderComponent()
 
       const autocomplete = screen.getByLabelText(
-        'becomeTutor.languages.autocompleteLabel'
+        'becomeTutor.language.autocompleteLabel'
       )
 
       fireEvent.mouseDown(autocomplete)
@@ -195,7 +195,7 @@ describe('LanguageStep component', () => {
       renderComponent()
 
       const autocomplete = screen.getByLabelText(
-        'becomeTutor.languages.autocompleteLabel'
+        'becomeTutor.language.autocompleteLabel'
       )
 
       fireEvent.mouseDown(autocomplete)
@@ -216,7 +216,7 @@ describe('LanguageStep component', () => {
       })
 
       const autocomplete = screen.getByLabelText(
-        'becomeTutor.languages.autocompleteLabel'
+        'becomeTutor.language.autocompleteLabel'
       )
       expect(autocomplete).toBeInTheDocument()
     })
@@ -227,7 +227,7 @@ describe('LanguageStep component', () => {
       })
 
       const autocomplete = screen.getByLabelText(
-        'becomeTutor.languages.autocompleteLabel'
+        'becomeTutor.language.autocompleteLabel'
       )
       expect(autocomplete).toBeInTheDocument()
     })
@@ -248,7 +248,7 @@ describe('LanguageStep component', () => {
 
         const { unmount } = renderComponent()
 
-        const title = screen.getByText('becomeTutor.languages.title')
+        const title = screen.getByText('becomeTutor.language.title')
         expect(title).toBeInTheDocument()
 
         unmount()
@@ -265,7 +265,7 @@ describe('LanguageStep component', () => {
       })
 
       const autocomplete = screen.getByLabelText(
-        'becomeTutor.languages.autocompleteLabel'
+        'becomeTutor.language.autocompleteLabel'
       )
       expect(autocomplete).toBeInTheDocument()
     })
@@ -274,7 +274,7 @@ describe('LanguageStep component', () => {
       renderComponent()
 
       const autocomplete = screen.getByLabelText(
-        'becomeTutor.languages.autocompleteLabel'
+        'becomeTutor.language.autocompleteLabel'
       )
 
       fireEvent.mouseDown(autocomplete)
