@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent, SelectProps } from '@mui/material/Select'
 import FormControl from '@mui/material/FormControl'
+import FormHelperText from '@mui/material/FormHelperText'
 import Box from '@mui/material/Box'
 
 import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
+import Tooltip from '@mui/material/Tooltip'
 
 import { SelectFieldType } from '~/types'
 import { styles } from '~/components/app-select/AppSelect.styles'
@@ -16,6 +18,7 @@ interface AppSelectProps<T> extends SelectProps<T> {
   value: T
   fields: SelectFieldType<T>[]
   selectTitle?: string
+  errorMsg?: string
 }
 
 const AppSelect = <T,>({
@@ -25,12 +28,21 @@ const AppSelect = <T,>({
   selectTitle,
   sx,
   label,
+  errorMsg,
   ...props
 }: AppSelectProps<T>) => {
   const { t } = useTranslation()
 
   const changeValue = (event: SelectChangeEvent<T>) =>
     setValue(event.target.value as T)
+
+  const helperText = errorMsg ? (
+    <Tooltip title={errorMsg}>
+      <Typography variant='caption'>{errorMsg}</Typography>
+    </Tooltip>
+  ) : (
+    ' '
+  )
 
   const fieldsList = fields.map(({ title, value }) => {
     if (typeof value === 'string' || typeof value === 'number') {
@@ -51,7 +63,7 @@ const AppSelect = <T,>({
   return (
     <Box sx={{ ...styles.selectContainer, ...sx }}>
       {titleEl}
-      <FormControl fullWidth sx={styles.formControl}>
+      <FormControl error={Boolean(errorMsg)} fullWidth sx={styles.formControl}>
         <InputLabel id='select-label'>{label}</InputLabel>
         <Select
           inputProps={{ 'data-testid': 'app-select' }}
@@ -64,6 +76,7 @@ const AppSelect = <T,>({
         >
           {fieldsList}
         </Select>
+        <FormHelperText sx={styles.helperText}>{helperText}</FormHelperText>
       </FormControl>
     </Box>
   )
