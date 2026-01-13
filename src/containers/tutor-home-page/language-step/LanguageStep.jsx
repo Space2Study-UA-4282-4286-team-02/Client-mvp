@@ -92,7 +92,7 @@ const LanguageStep = ({ btnsBox }) => {
             }}
             variant={isMobile ? 'body2' : 'subtitle1'}
           >
-            {t('becomeTutor.languages.title')}
+            {t('becomeTutor.language.title')}
           </Typography>
           {isMobile && (
             <Box sx={styles.imgContainer}>
@@ -113,7 +113,7 @@ const LanguageStep = ({ btnsBox }) => {
             onInputChange={handleInputChange}
             options={visibleOptions}
             textFieldProps={{
-              label: t('becomeTutor.languages.autocompleteLabel')
+              label: t('becomeTutor.language.autocompleteLabel')
             }}
             value={selectedLanguage}
           />
