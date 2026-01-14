@@ -2,6 +2,7 @@ import leak_add from '~/assets/img/offer-page/leak_add.svg'
 import counter_1 from '~/assets/img/offer-page/counter_1.svg'
 import counter_2 from '~/assets/img/offer-page/counter_2.svg'
 import counter_3 from '~/assets/img/offer-page/counter_3.svg'
+import uah_icon from '~/assets/img/find-offer/currency_uah.svg'
 import {
   ProficiencyLevelEnum,
   LanguagesEnum,
@@ -28,17 +29,23 @@ export const IMAGES = {
   leakAdd: leak_add,
   counter1: counter_1,
   counter2: counter_2,
-  counter3: counter_3
+  counter3: counter_3,
+  uahIcon: uah_icon
 }
 
 export const PRICE_RANGE = {
-  MIN: 150,
+  MIN: 0,
   MAX: 3500,
-  DEFAULT: [150, 3500] as [number, number]
+  DEFAULT: [0, 3500] as [number, number]
 }
 
 export const DESCRIPTION = {
   MAX_LENGTH: 2000
+}
+
+export const FAQ_LIMITS = {
+  MIN: 1,
+  MAX: 5
 }
 
 export const getLanguageTranslationKey = (lang: LanguagesEnum): string => {
@@ -89,9 +96,15 @@ export const isFormValid = (
     data.description.trim() !== '' &&
     data.languages.length > 0 &&
     Object.values(errors).every((e) => !e)
-
   if (userRole === UserRoleEnum.Tutor) {
-    return baseValid && !!data.title && !!(data.FAQ && data.FAQ.length > 0)
+    const faqValid = !!(
+      data.FAQ &&
+      data.FAQ.length > 0 &&
+      data.FAQ.every(
+        (faq) => faq.question.trim() !== '' && faq.answer.trim() !== ''
+      )
+    )
+    return baseValid && !!data.title && faqValid
   }
 
   return baseValid
@@ -131,6 +144,9 @@ export const validations = {
     emptyField(value as string | null, 'offerPage.errorMessages.title'),
   FAQ: (value: Faq[] | undefined | string) => {
     const arr = Array.isArray(value) ? value : []
-    return arr.length > 0 ? '' : 'offerPage.errorMessages.faq'
+    const isValid =
+      arr.length > 0 &&
+      arr.every((faq) => faq.question.trim() !== '' && faq.answer.trim() !== '')
+    return isValid ? '' : 'offerPage.errorMessages.faq'
   }
 }

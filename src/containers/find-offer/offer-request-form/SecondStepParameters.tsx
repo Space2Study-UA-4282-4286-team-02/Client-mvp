@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import InputAdornment from '@mui/material/InputAdornment'
 import { TFunction } from 'i18next'
 import { useState, useCallback } from 'react'
 
@@ -10,6 +11,7 @@ import AppChip from '~/components/app-chip/AppChip'
 
 import {
   IMAGES,
+  PRICE_RANGE,
   PRICE_RANGE as PRICE_RANGE_CONST,
   getLanguageTranslationKey,
   handleLanguageSelection
@@ -18,14 +20,13 @@ import {
   SelectFieldType,
   LanguagesEnum,
   OfferFormData,
-  UserRoleEnum
+  UserRoleEnum,
+  TypographyVariantEnum
 } from '~/types'
 import { styles } from './OfferRequestForm.styles'
 import AppTextField from '~/components/app-text-field/AppTextField'
 
 type Field = SelectFieldType<LanguagesEnum>
-
-type PriceRangeType = typeof PRICE_RANGE_CONST
 
 type Props = {
   t: TFunction
@@ -37,7 +38,6 @@ type Props = {
   handleBlur: (
     key: keyof OfferFormData
   ) => (e: React.FocusEvent<HTMLInputElement>) => void
-  PRICE_RANGE?: PriceRangeType
 }
 
 const buildLanguageFields = (
@@ -56,8 +56,7 @@ const SecondStepParameters = ({
   errors,
   handleRemoveLanguage,
   handleNonInputValueChange,
-  handleBlur,
-  PRICE_RANGE
+  handleBlur
 }: Props) => {
   const languages = Object.values(LanguagesEnum)
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false)
@@ -94,7 +93,7 @@ const SecondStepParameters = ({
     <Box sx={styles.section}>
       <Box sx={styles.sectionHeader}>
         <Box alt='counter 2' component='img' src={IMAGES.counter2} />
-        <Typography sx={styles.sectionTitle} variant='h6'>
+        <Typography sx={styles.sectionTitle} variant={TypographyVariantEnum.H6}>
           {t(`offerPage.title.secondStep.${userRole}`)}
         </Typography>
       </Box>
@@ -105,10 +104,12 @@ const SecondStepParameters = ({
             <Typography sx={styles.sectionDescription}>
               {t(`offerPage.description.title.${userRole}`)}
             </Typography>
-            <AppTextField
+            <AppTextArea
               errorMsg={errors.title ? t(errors.title) : undefined}
               fullWidth
               label={t('offerPage.labels.title')}
+              maxLength={100}
+              minRows={1}
               onBlur={handleBlur('title')}
               onChange={(e) =>
                 handleNonInputValueChange('title', e.target.value)
@@ -156,6 +157,9 @@ const SecondStepParameters = ({
         <Box sx={styles.fieldRow}>
           <Typography sx={styles.sectionDescription}>
             {t(`offerPage.description.price.${userRole}`)}
+            {userRole === UserRoleEnum.Student && (
+              <span> {t(`common.uah`)}</span>
+            )}
           </Typography>
           {userRole === UserRoleEnum.Student && (
             <AppRange
@@ -170,6 +174,17 @@ const SecondStepParameters = ({
           {userRole === UserRoleEnum.Tutor && (
             <Box sx={styles.priceInputWrapper}>
               <AppTextField
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Box
+                        component='img'
+                        src={IMAGES.uahIcon}
+                        sx={{ width: '15px' }}
+                      />
+                    </InputAdornment>
+                  )
+                }}
                 errorMsg={errors.price ? t(errors.price) : undefined}
                 fullWidth
                 onBlur={handleBlur('price')}

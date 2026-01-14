@@ -19,7 +19,11 @@ import {
   UserRoleEnum,
   StatusEnum,
   UserRole,
-  OfferFormData
+  OfferFormData,
+  ComponentEnum,
+  ButtonTypeEnum,
+  TypographyVariantEnum,
+  ButtonVariantEnum
 } from '~/types'
 
 import { styles } from './OfferRequestForm.styles'
@@ -70,12 +74,13 @@ const OfferRequestForm = () => {
       await new Promise((resolve) => setTimeout(resolve, 0))
       const payload = {
         ...formData,
-        status: isDraft ? StatusEnum.Draft : StatusEnum.Pending,
+        status: isDraft ? StatusEnum.Draft : StatusEnum.Active,
         authorRole: userRole
       }
       console.log('Form submitted', payload)
     },
-    validations
+    validations,
+    submitWithData: true
   })
 
   const handleCategoryChange = useCallback(
@@ -103,11 +108,15 @@ const OfferRequestForm = () => {
   )
 
   return (
-    <Box component='form' onSubmit={handleSubmit} sx={styles.root}>
+    <Box
+      component={ComponentEnum.Form}
+      onSubmit={handleSubmit}
+      sx={styles.root}
+    >
       {/* Header */}
       <Box sx={styles.header}>
         <Box alt='leak_add' component='img' src={IMAGES.leakAdd} />
-        <Typography sx={styles.title} variant='h5'>
+        <Typography sx={styles.title} variant={TypographyVariantEnum.H5}>
           {t(`offerPage.createOffer.title.${userRole}`)}
         </Typography>
       </Box>
@@ -136,7 +145,6 @@ const OfferRequestForm = () => {
       />
 
       <SecondStepParameters
-        PRICE_RANGE={PRICE_RANGE}
         data={data}
         errors={errors}
         handleBlur={handleBlur}
@@ -155,7 +163,6 @@ const OfferRequestForm = () => {
         <ThirdStepFaq
           data={data}
           errors={errors}
-          handleBlur={handleBlur}
           handleErrors={handleErrors}
           handleNonInputValueChange={
             handleNonInputValueChange as (
@@ -173,11 +180,15 @@ const OfferRequestForm = () => {
         <AppButton
           disabled={!isFormValid(data, errors, isDirty, userRole)}
           fullWidth
-          type='submit'
+          type={ButtonTypeEnum.Submit}
         >
           {t(`offerPage.createOffer.buttonTitles.${userRole}`)}
         </AppButton>
-        <AppButton fullWidth onClick={() => setIsDraft(true)} variant='tonal'>
+        <AppButton
+          fullWidth
+          onClick={() => setIsDraft(true)}
+          variant={ButtonVariantEnum.Tonal}
+        >
           {t(`offerPage.createOffer.buttonTitles.addToDrafts`)}
         </AppButton>
       </Box>

@@ -85,8 +85,8 @@ export const styles = {
   },
   chipContainer: {
     display: 'flex',
-    gap: '8px',
     flexWrap: 'wrap',
+    gap: '8px',
     mt: '-12px'
   },
   faqItemContainer: {
@@ -98,7 +98,6 @@ export const styles = {
   faqFieldsWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
     flex: 1
   },
   footer: {

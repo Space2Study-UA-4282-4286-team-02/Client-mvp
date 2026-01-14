@@ -9,7 +9,8 @@ import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
 import {
   CategoryNameInterface,
   SubjectNameInterface,
-  ProficiencyLevelEnum
+  ProficiencyLevelEnum,
+  TypographyVariantEnum
 } from '~/types'
 import { OfferFormData } from '~/types'
 import { categoryService } from '~/services/category-service'
@@ -88,7 +89,7 @@ const FirstStepSpecialization = ({
     <Box sx={styles.section}>
       <Box sx={styles.sectionHeader}>
         <Box alt='counter 1' component='img' src={IMAGES.counter1} />
-        <Typography sx={styles.sectionTitle} variant='h6'>
+        <Typography sx={styles.sectionTitle} variant={TypographyVariantEnum.H6}>
           {t(`offerPage.title.firstStep.${userRole}`)}
         </Typography>
       </Box>
