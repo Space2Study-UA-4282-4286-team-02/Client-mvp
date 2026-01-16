@@ -1,4 +1,3 @@
-import { useState, useCallback, SyntheticEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -8,18 +7,11 @@ import AppButton from '~/components/app-button/AppButton'
 import useForm from '~/hooks/use-form'
 import { useAppSelector } from '~/hooks/use-redux'
 
-import { categoryService } from '~/services/category-service'
-import { subjectService } from '~/services/subject-service'
-
 import {
-  CategoryNameInterface,
-  SubjectNameInterface,
   ProficiencyLevelEnum,
   LanguagesEnum,
-  UserRoleEnum,
   StatusEnum,
   UserRole,
-  OfferFormData,
   ComponentEnum,
   ButtonTypeEnum,
   TypographyVariantEnum,
@@ -29,10 +21,9 @@ import {
 import { styles } from './OfferRequestForm.styles'
 import {
   IMAGES,
-  PRICE_RANGE,
   validations,
   isFormValid,
-  getProficiencyLevelTranslationKey
+  OfferFormData
 } from './OfferRequestForm.constants'
 import FirstStepSpecialization from './FirstStepSpecialization'
 import SecondStepParameters from './SecondStepParameters'
@@ -44,8 +35,6 @@ const OfferRequestForm = () => {
     (state) => state.appMain
   )
   const userRole = userRoleFromRedux as UserRole
-
-  const [isDraft, setIsDraft] = useState(false)
 
   const {
     data,
@@ -62,19 +51,16 @@ const OfferRequestForm = () => {
       proficiencyLevel: [] as ProficiencyLevelEnum[],
       description: '',
       languages: [] as LanguagesEnum[],
-      priceRange: PRICE_RANGE.DEFAULT as [number, number],
-      ...(userRole === UserRoleEnum.Tutor && {
-        title: '',
-        price: 0,
-        FAQ: [{ question: '', answer: '' }]
-      })
+      title: '',
+      price: 0,
+      FAQ: [{ question: '', answer: '' }]
     } as OfferFormData,
     onSubmit: async (formData?: OfferFormData) => {
       if (!formData) return
       await new Promise((resolve) => setTimeout(resolve, 0))
       const payload = {
         ...formData,
-        status: isDraft ? StatusEnum.Draft : StatusEnum.Active,
+        status: StatusEnum.Active,
         authorRole: userRole
       }
       console.log('Form submitted', payload)
@@ -83,30 +69,6 @@ const OfferRequestForm = () => {
     submitWithData: true
   })
 
-  const handleCategoryChange = useCallback(
-    (event: SyntheticEvent, value: CategoryNameInterface | null) => {
-      handleNonInputValueChange('category', value?._id || null)
-      handleNonInputValueChange('subject', null)
-      handleNonInputValueChange('proficiencyLevel', [])
-    },
-    [handleNonInputValueChange]
-  )
-
-  const handleSubjectChange = useCallback(
-    (event: SyntheticEvent, value: SubjectNameInterface | null) =>
-      handleNonInputValueChange('subject', value?._id || null),
-    [handleNonInputValueChange]
-  )
-
-  const handleRemoveLanguage = useCallback(
-    (langToRemove: LanguagesEnum) =>
-      handleNonInputValueChange(
-        'languages',
-        data.languages.filter((l) => l !== langToRemove)
-      ),
-    [data.languages, handleNonInputValueChange]
-  )
-
   return (
     <Box
       component={ComponentEnum.Form}
@@ -114,23 +76,20 @@ const OfferRequestForm = () => {
       sx={styles.root}
     >
       {/* Header */}
-      <Box sx={styles.header}>
+      <Box sx={styles.header.wrapper}>
         <Box alt='leak_add' component='img' src={IMAGES.leakAdd} />
-        <Typography sx={styles.title} variant={TypographyVariantEnum.H5}>
+        <Typography sx={styles.header.title} variant={TypographyVariantEnum.H5}>
           {t(`offerPage.createOffer.title.${userRole}`)}
         </Typography>
       </Box>
-      <Typography sx={styles.description}>
+      <Typography sx={styles.titleDescription.wrapper}>
         {t(`offerPage.createOffer.description.${userRole}`)}
       </Typography>
 
       <FirstStepSpecialization
-        categoryService={categoryService}
         data={data}
         errors={errors}
-        getProficiencyLevelTranslationKey={getProficiencyLevelTranslationKey}
         handleBlur={handleBlur}
-        handleCategoryChange={handleCategoryChange}
         handleErrors={handleErrors}
         handleNonInputValueChange={
           handleNonInputValueChange as (
@@ -138,8 +97,6 @@ const OfferRequestForm = () => {
             value: unknown
           ) => void
         }
-        handleSubjectChange={handleSubjectChange}
-        subjectService={subjectService}
         t={t}
         userRole={userRole}
       />
@@ -154,31 +111,28 @@ const OfferRequestForm = () => {
             value: unknown
           ) => void
         }
-        handleRemoveLanguage={handleRemoveLanguage}
         t={t}
         userRole={userRole}
       />
 
-      {userRole === UserRoleEnum.Tutor && (
-        <ThirdStepFaq
-          data={data}
-          errors={errors}
-          handleErrors={handleErrors}
-          handleNonInputValueChange={
-            handleNonInputValueChange as (
-              key: keyof OfferFormData,
-              value: unknown
-            ) => void
-          }
-          t={t}
-          userRole={userRole}
-        />
-      )}
+      <ThirdStepFaq
+        data={data}
+        errors={errors}
+        handleErrors={handleErrors}
+        handleNonInputValueChange={
+          handleNonInputValueChange as (
+            key: keyof OfferFormData,
+            value: unknown
+          ) => void
+        }
+        t={t}
+        userRole={userRole}
+      />
 
       {/* Footer */}
       <Box sx={styles.footer}>
         <AppButton
-          disabled={!isFormValid(data, errors, isDirty, userRole)}
+          disabled={!isFormValid(data, errors, isDirty)}
           fullWidth
           type={ButtonTypeEnum.Submit}
         >
@@ -186,7 +140,7 @@ const OfferRequestForm = () => {
         </AppButton>
         <AppButton
           fullWidth
-          onClick={() => setIsDraft(true)}
+          onClick={() => {}}
           variant={ButtonVariantEnum.Tonal}
         >
           {t(`offerPage.createOffer.buttonTitles.addToDrafts`)}

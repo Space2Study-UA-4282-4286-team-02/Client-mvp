@@ -8,12 +8,16 @@ import { TFunction } from 'i18next'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import AppTextArea from '~/components/app-text-area/AppTextArea'
 
-import { IMAGES, FAQ_LIMITS } from './OfferRequestForm.constants'
+import {
+  IMAGES,
+  FAQ_LIMITS,
+  FIELD_LIMITS,
+  OfferFormData
+} from './OfferRequestForm.constants'
 import { styles } from './OfferRequestForm.styles'
 import {
   ButtonVariantEnum,
   Faq,
-  OfferFormData,
   SizeEnum,
   TypographyVariantEnum
 } from '~/types'
@@ -50,13 +54,25 @@ const ThirdStepFaq = ({
       question: '',
       answer: ''
     }
-    handleNonInputValueChange('FAQ', [...faqList, newFaq])
+    const updatedFaq = [...faqList, newFaq]
+    handleNonInputValueChange('FAQ', updatedFaq)
+    handleErrors('FAQ', 'offerPage.errorMessages.faq')
   }
 
   const handleRemoveFaq = (index: number) => {
     if (faqList.length <= FAQ_LIMITS.MIN) return
     const updatedFaq = faqList.filter((_: Faq, i: number) => i !== index)
     handleNonInputValueChange('FAQ', updatedFaq)
+
+    const allValid = updatedFaq.every(
+      (faq) => faq.question.trim() !== '' && faq.answer.trim() !== ''
+    )
+
+    if (allValid) {
+      handleErrors('FAQ', '')
+    } else {
+      handleErrors('FAQ', 'offerPage.errorMessages.faq')
+    }
 
     setFaqErrors((prev) => {
       const newErrors: Record<number, { question?: string; answer?: string }> =
@@ -84,9 +100,15 @@ const ThirdStepFaq = ({
       [field]: value
     }
     handleNonInputValueChange('FAQ', updatedFaq)
-    const currentFaq = updatedFaq[index]
-    if (currentFaq.question.trim() !== '' && currentFaq.answer.trim() !== '') {
+
+    const allValid = updatedFaq.every(
+      (faq) => faq.question.trim() !== '' && faq.answer.trim() !== ''
+    )
+
+    if (allValid) {
       handleErrors('FAQ', '')
+    } else {
+      handleErrors('FAQ', 'offerPage.errorMessages.faq')
     }
   }
 
@@ -105,22 +127,25 @@ const ThirdStepFaq = ({
   }
 
   return (
-    <Box sx={styles.section}>
-      <Box sx={styles.sectionHeader}>
+    <Box sx={styles.section.wrapper}>
+      <Box sx={styles.section.header}>
         <Box alt='counter 3' component='img' src={IMAGES.counter3} />
-        <Typography sx={styles.sectionTitle} variant={TypographyVariantEnum.H6}>
+        <Typography
+          sx={styles.section.title}
+          variant={TypographyVariantEnum.H6}
+        >
           {t(`offerPage.title.thirdStep`)}
         </Typography>
       </Box>
 
-      <Box sx={styles.sectionContent}>
-        <Typography sx={styles.sectionDescription}>
+      <Box sx={styles.section.content.default}>
+        <Typography sx={styles.section.description}>
           {t(`offerPage.description.thirdStep.${userRole}`)}
         </Typography>
 
         {faqList.map((faq: Faq, index: number) => (
-          <Box key={index} sx={styles.faqItemContainer}>
-            <Box sx={styles.faqFieldsWrapper}>
+          <Box key={index} sx={styles.faq.container}>
+            <Box sx={styles.faq.fieldsWrapper}>
               <AppTextField
                 errorMsg={
                   faqErrors[index]?.question
@@ -128,6 +153,9 @@ const ThirdStepFaq = ({
                     : undefined
                 }
                 fullWidth
+                inputProps={{
+                  maxLength: FIELD_LIMITS.QUESTION_MAX_LENGTH
+                }}
                 onBlur={() => handleFaqFieldBlur(index, 'question')}
                 onChange={(e) =>
                   handleFaqChange(index, 'question', e.target.value)
@@ -142,7 +170,7 @@ const ThirdStepFaq = ({
                     : undefined
                 }
                 fullWidth
-                maxLength={400}
+                maxLength={FIELD_LIMITS.ANSWER_MAX_LENGTH}
                 onBlur={() => handleFaqFieldBlur(index, 'answer')}
                 onChange={(e) =>
                   handleFaqChange(index, 'answer', e.target.value)
@@ -160,10 +188,6 @@ const ThirdStepFaq = ({
             </IconButton>
           </Box>
         ))}
-
-        {/* {errors.FAQ && faqList.length > 5 && (
-          <Typography sx={styles.errorText}>{t(errors.FAQ)}</Typography>
-        )} */}
 
         <Button
           disabled={faqList.length >= FAQ_LIMITS.MAX}

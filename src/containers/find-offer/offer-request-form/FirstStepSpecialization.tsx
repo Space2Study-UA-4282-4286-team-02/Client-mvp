@@ -1,4 +1,4 @@
-import { SyntheticEvent } from 'react'
+import { SyntheticEvent, useCallback, useMemo } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
@@ -12,10 +12,13 @@ import {
   ProficiencyLevelEnum,
   TypographyVariantEnum
 } from '~/types'
-import { OfferFormData } from '~/types'
 import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
-import { IMAGES } from './OfferRequestForm.constants'
+import {
+  getProficiencyLevelTranslationKey,
+  IMAGES,
+  OfferFormData
+} from './OfferRequestForm.constants'
 import { styles } from './OfferRequestForm.styles'
 
 type Props = {
@@ -23,22 +26,11 @@ type Props = {
   userRole: string
   data: OfferFormData
   errors: Partial<Record<keyof OfferFormData, string>>
-  getProficiencyLevelTranslationKey: (level: ProficiencyLevelEnum) => string
   handleBlur: (
     key: keyof OfferFormData
   ) => (e: React.FocusEvent<HTMLInputElement>) => void
   handleNonInputValueChange: (key: keyof OfferFormData, value: unknown) => void
   handleErrors: (key: keyof OfferFormData, error: string) => void
-  handleCategoryChange: (
-    event: SyntheticEvent,
-    value: CategoryNameInterface | null
-  ) => void
-  handleSubjectChange: (
-    event: SyntheticEvent,
-    value: SubjectNameInterface | null
-  ) => void
-  categoryService: typeof categoryService
-  subjectService: typeof subjectService
 }
 
 const FirstStepSpecialization = ({
@@ -46,16 +38,28 @@ const FirstStepSpecialization = ({
   userRole,
   data,
   errors,
-  getProficiencyLevelTranslationKey,
   handleBlur,
   handleNonInputValueChange,
-  handleErrors,
-  handleCategoryChange,
-  handleSubjectChange,
-  categoryService,
-  subjectService
+  handleErrors
 }: Props) => {
-  const proficiencyLevels = Object.values(ProficiencyLevelEnum)
+  const handleCategoryChange = useCallback(
+    (event: SyntheticEvent, value: CategoryNameInterface | null) => {
+      handleNonInputValueChange('category', value?._id || null)
+      handleNonInputValueChange('subject', null)
+      handleNonInputValueChange('proficiencyLevel', [])
+    },
+    [handleNonInputValueChange]
+  )
+
+  const handleSubjectChange = useCallback(
+    (event: SyntheticEvent, value: SubjectNameInterface | null) =>
+      handleNonInputValueChange('subject', value?._id || null),
+    [handleNonInputValueChange]
+  )
+  const proficiencyLevels = useMemo(
+    () => Object.values(ProficiencyLevelEnum),
+    []
+  )
 
   const handleProficiencyLevelChange = (
     level: ProficiencyLevelEnum,
@@ -86,17 +90,20 @@ const FirstStepSpecialization = ({
   }
 
   return (
-    <Box sx={styles.section}>
-      <Box sx={styles.sectionHeader}>
+    <Box sx={styles.section.wrapper}>
+      <Box sx={styles.section.header}>
         <Box alt='counter 1' component='img' src={IMAGES.counter1} />
-        <Typography sx={styles.sectionTitle} variant={TypographyVariantEnum.H6}>
+        <Typography
+          sx={styles.section.title}
+          variant={TypographyVariantEnum.H6}
+        >
           {t(`offerPage.title.firstStep.${userRole}`)}
         </Typography>
       </Box>
 
-      <Box sx={styles.sectionContent}>
-        <Box sx={styles.fieldRow}>
-          <Typography sx={styles.sectionDescription}>
+      <Box sx={styles.section.content.default}>
+        <Box sx={styles.field.row.default}>
+          <Typography sx={styles.section.description}>
             {t(`offerPage.description.category.${userRole}`)}
           </Typography>
 
@@ -114,7 +121,7 @@ const FirstStepSpecialization = ({
             valueField='_id'
           />
         </Box>
-        <Box sx={styles.fieldRow}>
+        <Box sx={styles.field.row.default}>
           <AsyncAutocomplete
             disabled={!data.category}
             fetchCondition={Boolean(data.category)}
@@ -134,8 +141,8 @@ const FirstStepSpecialization = ({
           />
         </Box>
 
-        <Box sx={styles.fieldRow}>
-          <Typography sx={styles.sectionDescription}>
+        <Box sx={styles.field.row.default}>
+          <Typography sx={styles.section.description}>
             {t(`offerPage.description.level.${userRole}`)}
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -157,12 +164,14 @@ const FirstStepSpecialization = ({
                 }
                 key={level}
                 label={t(getProficiencyLevelTranslationKey(level))}
-                sx={styles.checkboxLabel}
+                sx={styles.checkbox.label}
               />
             ))}
           </Box>
           {errors.proficiencyLevel && (
-            <Typography sx={styles.errorText}>
+            <Typography
+              sx={{ color: 'error.main', fontSize: '12px', mt: '4px' }}
+            >
               {t(errors.proficiencyLevel)}
             </Typography>
           )}

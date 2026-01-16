@@ -3,15 +3,19 @@ import counter_1 from '~/assets/img/offer-page/counter_1.svg'
 import counter_2 from '~/assets/img/offer-page/counter_2.svg'
 import counter_3 from '~/assets/img/offer-page/counter_3.svg'
 import uah_icon from '~/assets/img/find-offer/currency_uah.svg'
-import {
-  ProficiencyLevelEnum,
-  LanguagesEnum,
-  UserRoleEnum,
-  Faq,
-  UserRole,
-  OfferFormData
-} from '~/types'
+import { ProficiencyLevelEnum, LanguagesEnum, Faq } from '~/types'
 import { emptyField, textField } from '~/utils/validations/common'
+
+export interface OfferFormData {
+  price?: number
+  proficiencyLevel: ProficiencyLevelEnum[]
+  title?: string
+  description: string
+  languages: LanguagesEnum[]
+  subject: string | null
+  category: string | null
+  FAQ?: Faq[]
+}
 
 interface OfferFormErrors {
   category?: string
@@ -33,14 +37,14 @@ export const IMAGES = {
   uahIcon: uah_icon
 }
 
-export const PRICE_RANGE = {
-  MIN: 0,
-  MAX: 3500,
-  DEFAULT: [0, 3500] as [number, number]
-}
-
-export const DESCRIPTION = {
-  MAX_LENGTH: 2000
+export const FIELD_LIMITS = {
+  TITLE_MAX_LENGTH: 100,
+  DESCRIPTION_MAX_LENGTH: {
+    TUTOR: 1000,
+    STUDENT: 2000
+  },
+  QUESTION_MAX_LENGTH: 200,
+  ANSWER_MAX_LENGTH: 400
 }
 
 export const FAQ_LIMITS = {
@@ -85,9 +89,16 @@ export const handleLanguageSelection = (
 export const isFormValid = (
   data: OfferFormData,
   errors: OfferFormErrors,
-  isDirty: boolean,
-  userRole: UserRole
+  isDirty: boolean
 ): boolean => {
+  const faqValid = !!(
+    data.FAQ &&
+    data.FAQ.length > 0 &&
+    data.FAQ.every(
+      (faq) => faq.question.trim() !== '' && faq.answer.trim() !== ''
+    )
+  )
+
   const baseValid =
     isDirty &&
     !!data.category &&
@@ -95,17 +106,10 @@ export const isFormValid = (
     data.proficiencyLevel.length > 0 &&
     data.description.trim() !== '' &&
     data.languages.length > 0 &&
-    Object.values(errors).every((e) => !e)
-  if (userRole === UserRoleEnum.Tutor) {
-    const faqValid = !!(
-      data.FAQ &&
-      data.FAQ.length > 0 &&
-      data.FAQ.every(
-        (faq) => faq.question.trim() !== '' && faq.answer.trim() !== ''
-      )
-    )
-    return baseValid && !!data.title && faqValid
-  }
+    !!data.title &&
+    (data.price ?? 0) > 0 &&
+    faqValid &&
+    Object.values(errors).every((error) => !error)
 
   return baseValid
 }
@@ -129,16 +133,11 @@ export const validations = {
     const arr = Array.isArray(value) ? value : []
     return arr.length > 0 ? '' : 'offerPage.errorMessages.languages'
   },
-  priceRange: (value: [number, number] | string) => {
-    const range = Array.isArray(value) ? value : PRICE_RANGE.DEFAULT
-    return range && range[0] >= PRICE_RANGE.MIN && range[1] <= PRICE_RANGE.MAX
-      ? ''
-      : 'offerPage.errorMessages.price'
-  },
   price: (value: number | string | undefined) => {
-    const num =
-      typeof value === 'number' ? value : parseInt(value as string, 10)
-    return num > 0 ? '' : 'offerPage.errorMessages.price'
+    if (value === undefined || value === '')
+      return 'offerPage.errorMessages.price'
+    const num = typeof value === 'number' ? value : parseInt(value, 10)
+    return !isNaN(num) && num > 0 ? '' : 'offerPage.errorMessages.price'
   },
   title: (value: string | undefined) =>
     emptyField(value as string | null, 'offerPage.errorMessages.title'),
