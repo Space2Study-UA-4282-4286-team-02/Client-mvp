@@ -45,7 +45,7 @@ const FindOffers = () => {
     if (!isFetchedSubjects) setIsFetchedSubjects(true)
   }
 
- const getId = (value: any): string | null => {
+  const getId = (value: any): string | null => {
     return value?._id ?? null
   }
 
@@ -229,10 +229,10 @@ const FindOffers = () => {
                 <Typography variant='subtitle1'>{o.title ?? o.name ?? '-'}</Typography>
 
                 <Typography variant='body2' sx={{ mt: 1 }}>
-                  <strong>Subject:</strong>{' '}
+                  <strong>{t('findOffers.item.subject')}</strong>{' '}
                   {o.subject?.name ?? o.subjectName ?? '-'}{' '}
                   <span style={{ marginLeft: 12 }}>
-                    <strong>Category:</strong>{' '}
+                    <strong>{t('findOffers.item.category')}</strong>{' '}
                     {o.category?.name ?? o.categoryName ?? '-'}
                   </span>
                 </Typography>
