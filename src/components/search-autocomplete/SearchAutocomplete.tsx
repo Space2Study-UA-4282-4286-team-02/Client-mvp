@@ -1,10 +1,10 @@
-import {
+import React, {
   useState,
+  useEffect,
   ReactNode,
   Dispatch,
   SetStateAction,
   SyntheticEvent,
-  ChangeEvent,
   KeyboardEvent
 } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -35,7 +35,7 @@ interface SearchAutocompleteProps
   extends Omit<AutocompleteProps<string, false, true, true>, 'renderInput'> {
   search: string
   setSearch: Dispatch<SetStateAction<string>>
-  onSearchChange?: () => void
+  onSearchChange?: (value?: string) => void
   textFieldProps: TextFieldProps
   renderInput?: (params: AutocompleteRenderInputParams) => ReactNode
 }
@@ -47,10 +47,14 @@ const SearchAutocomplete = ({
   textFieldProps,
   ...props
 }: SearchAutocompleteProps) => {
-  const [searchInput, setSearchInput] = useState<string>(search)
+  const [searchInput, setSearchInput] = useState<string>(search ?? '')
 
   const { t } = useTranslation()
   const { isMobile } = useBreakpoints()
+
+  useEffect(() => {
+    setSearchInput(search ?? '')
+  }, [search])
 
   const filterOptions = (
     options: string[],
@@ -60,36 +64,55 @@ const SearchAutocomplete = ({
     return defaultFilterOptions(options, state).slice(0, 6)
   }
 
-  const onInputChange = (_: ChangeEvent<HTMLInputElement>, value: string) => {
+  const callOnSearchChange = (value?: string) => {
+    if (!onSearchChange) return
+    try {
+      onSearchChange(value)
+    } catch {
+      onSearchChange()
+    }
+  }
+
+  const onInputChange = (_: any, value: string) => {
     setSearchInput(value)
   }
 
-  const handleAutoCompleteChange = (_: SyntheticEvent, value: string) => {
-    onSearchChange && onSearchChange()
-    setSearch(value)
+  const handleAutoCompleteChange = (
+    _: SyntheticEvent,
+    value: string | null
+  ) => {
+    const val = value ?? ''
+    setSearchInput(val)
+    setSearch(val)
+    callOnSearchChange(val)
   }
 
   const onSearch = () => {
-    onSearchChange && searchInput !== search && onSearchChange()
     setSearch(searchInput)
+    callOnSearchChange(searchInput)
   }
 
   const onClear = () => {
-    onSearchChange && search && onSearchChange()
     setSearchInput('')
     setSearch('')
+    callOnSearchChange('')
   }
 
   const onEnterPress = (event: KeyboardEvent<HTMLInputElement>) => {
-    event.key === 'Enter' && onSearch()
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      onSearch()
+    }
   }
 
   const labelStyle = {
     ...styles.inputLabel,
-    visibility: searchInput && VisibilityEnum.Hidden
+    visibility: searchInput ? VisibilityEnum.Hidden : VisibilityEnum.Visible
   }
   const clearIconVisibility = {
-    visibility: searchInput ? VisibilityEnum.Visible : VisibilityEnum.Hidden
+    visibility: searchInput
+      ? VisibilityEnum.Visible
+      : VisibilityEnum.Hidden
   }
 
   return (
