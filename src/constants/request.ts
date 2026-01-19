@@ -12,6 +12,10 @@ export const URLs = {
     forgotPassword: '/auth/forgot-password',
     resetPassword: '/auth/reset-password'
   },
+  offers: {
+    get: '/offers',
+    post: '/offers'
+  },
   users: {
     get: '/users',
     update: '/users',
