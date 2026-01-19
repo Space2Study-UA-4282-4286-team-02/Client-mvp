@@ -1,7 +1,8 @@
-import { SyntheticEvent, useCallback, useMemo } from 'react'
+import { SyntheticEvent, useMemo } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import Checkbox from '@mui/material/Checkbox'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { TFunction } from 'i18next'
 
@@ -42,51 +43,31 @@ const FirstStepSpecialization = ({
   handleNonInputValueChange,
   handleErrors
 }: Props) => {
-  const handleCategoryChange = useCallback(
-    (event: SyntheticEvent, value: CategoryNameInterface | null) => {
-      handleNonInputValueChange('category', value?._id || null)
-      handleNonInputValueChange('subject', null)
-      handleNonInputValueChange('proficiencyLevel', [])
-    },
-    [handleNonInputValueChange]
-  )
+  const handleCategoryChange = (
+    event: SyntheticEvent,
+    value: CategoryNameInterface | null
+  ) => {
+    handleNonInputValueChange('category', value?._id || null)
+    handleNonInputValueChange('subject', null)
+    handleNonInputValueChange('proficiencyLevel', '')
+  }
 
-  const handleSubjectChange = useCallback(
-    (event: SyntheticEvent, value: SubjectNameInterface | null) =>
-      handleNonInputValueChange('subject', value?._id || null),
-    [handleNonInputValueChange]
-  )
+  const handleSubjectChange = (
+    event: SyntheticEvent,
+    value: SubjectNameInterface | null
+  ) => handleNonInputValueChange('subject', value?._id || null)
+
   const proficiencyLevels = useMemo(
     () => Object.values(ProficiencyLevelEnum),
     []
   )
 
   const handleProficiencyLevelChange = (
-    level: ProficiencyLevelEnum,
-    isChecked: boolean
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const currentLevels = Array.isArray(data.proficiencyLevel)
-      ? [...data.proficiencyLevel]
-      : []
-
-    if (isChecked) {
-      if (!currentLevels.includes(level)) {
-        currentLevels.push(level)
-      }
-    } else {
-      const index = currentLevels.indexOf(level)
-      if (index > -1) {
-        currentLevels.splice(index, 1)
-      }
-    }
-
-    if (currentLevels.length > 0) {
-      handleErrors('proficiencyLevel', '')
-    } else {
-      handleErrors('proficiencyLevel', 'offerPage.errorMessages.level')
-    }
-
-    handleNonInputValueChange('proficiencyLevel', currentLevels)
+    const level = event.target.value as ProficiencyLevelEnum
+    handleNonInputValueChange('proficiencyLevel', level)
+    handleErrors('proficiencyLevel', '')
   }
 
   return (
@@ -145,18 +126,14 @@ const FirstStepSpecialization = ({
           <Typography sx={styles.section.description}>
             {t(`offerPage.description.level.${userRole}`)}
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <RadioGroup
+            onChange={handleProficiencyLevelChange}
+            value={data.proficiencyLevel || ''}
+          >
             {proficiencyLevels.map((level) => (
               <FormControlLabel
                 control={
-                  <Checkbox
-                    checked={(Array.isArray(data.proficiencyLevel)
-                      ? data.proficiencyLevel
-                      : []
-                    ).includes(level)}
-                    onChange={(e) =>
-                      handleProficiencyLevelChange(level, e.target.checked)
-                    }
+                  <Radio
                     sx={{
                       color: errors.proficiencyLevel ? '#F54636' : undefined
                     }}
@@ -165,9 +142,10 @@ const FirstStepSpecialization = ({
                 key={level}
                 label={t(getProficiencyLevelTranslationKey(level))}
                 sx={styles.checkbox.label}
+                value={level}
               />
             ))}
-          </Box>
+          </RadioGroup>
           {errors.proficiencyLevel && (
             <Typography
               sx={{ color: 'error.main', fontSize: '12px', mt: '4px' }}

@@ -8,7 +8,10 @@
       "tutor": "Start building your tutoring business by creating your offer below. Select the options that best describe your expertise and help students find the perfect match for their needs.",
       "student": "Find the perfect tutor for your needs by creating a request below. Select the options that best describe what you're looking for, and we'll match you with qualified tutors who can help you reach your academic goals."
     },
-    "successMessage": "Great news! Your submission has been successfully added.",
+    "successMessage": {
+      "tutor": "Great news! Your offer has been successfully created.",
+      "student": "Great news! Your request has been successfully created."
+    },
     "buttonTitles": {
       "tutor": "Create offer",
       "student": "Create request",
@@ -21,10 +24,6 @@
       "tutor": "Edit your offer",
       "student": "Edit your request"
     },
-    "description": {
-      "tutor": "Start building your tutoring business by creating your offer below. Select the options that best describe your expertise and help students find the perfect match for their needs.",
-      "student": "Find the perfect tutor for your needs by creating a request below. Select the options that best describe what you're looking for, and we'll match you with qualified tutors who can help you reach your academic goals."
-    },
     "successMessage": "Great news! Your submission has been successfully updated.",
     "buttonTitles": {
       "tutor": "Update offer",
@@ -35,6 +34,10 @@
     "firstStep": {
       "tutor": "Pick Your Specialization",
       "student": "Describe Your Learning Needs"
+    },
+    "description": {
+      "tutor": "Start building your tutoring business by creating your offer below. Select the options that best describe your expertise and help students find the perfect match for their needs.",
+      "student": "Find the perfect tutor for your needs by creating a request below. Select the options that best describe what you're looking for, and we'll match you with qualified tutors who can help you reach your academic goals."
     },
     "secondStep": {
       "tutor": "Teaching parameters",

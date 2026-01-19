@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -11,7 +12,7 @@ import {
   ProficiencyLevelEnum,
   LanguagesEnum,
   StatusEnum,
-  UserRole,
+  UserRoleEnum,
   ComponentEnum,
   ButtonTypeEnum,
   TypographyVariantEnum,
@@ -28,13 +29,19 @@ import {
 import FirstStepSpecialization from './FirstStepSpecialization'
 import SecondStepParameters from './SecondStepParameters'
 import ThirdStepFaq from './ThirdStepFaq'
+import { offerService, CreateOfferPayload } from '~/services/offer-service'
+import { useSnackBarContext } from '~/context/snackbar-context'
+import { snackbarVariants } from '~/constants'
 
-const OfferRequestForm = () => {
+type Props = {
+  closeDrawer: () => void
+}
+
+const OfferRequestForm = ({ closeDrawer }: Props) => {
   const { t } = useTranslation()
-  const { userRole: userRoleFromRedux } = useAppSelector(
-    (state) => state.appMain
-  )
-  const userRole = userRoleFromRedux as UserRole
+  const { userRole } = useAppSelector((state) => state.appMain)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { setAlert } = useSnackBarContext()
 
   const {
     data,
@@ -48,7 +55,7 @@ const OfferRequestForm = () => {
     initialValues: {
       category: null as string | null,
       subject: null as string | null,
-      proficiencyLevel: [] as ProficiencyLevelEnum[],
+      proficiencyLevel: '' as ProficiencyLevelEnum | '',
       description: '',
       languages: [] as LanguagesEnum[],
       title: '',
@@ -56,18 +63,63 @@ const OfferRequestForm = () => {
       FAQ: [{ question: '', answer: '' }]
     } as OfferFormData,
     onSubmit: async (formData?: OfferFormData) => {
-      if (!formData) return
-      await new Promise((resolve) => setTimeout(resolve, 0))
-      const payload = {
-        ...formData,
-        status: StatusEnum.Active,
-        authorRole: userRole
+      if (
+        !formData ||
+        !userRole ||
+        !formData.subject ||
+        !formData.category ||
+        !formData.proficiencyLevel
+      ) {
+        return
       }
-      console.log('Form submitted', payload)
+      setIsSubmitting(true)
+
+      const payload: CreateOfferPayload = {
+        title: formData.title || '',
+        price: formData.price || 0,
+        proficiencyLevel: formData.proficiencyLevel,
+        description: formData.description,
+        languages: formData.languages,
+        subject: formData.subject,
+        category: formData.category,
+        FAQ: formData.FAQ || [],
+        status: StatusEnum.Active,
+        authorRole: userRole as UserRoleEnum
+      }
+
+      try {
+        // await new Promise((r) => setTimeout(r, 2000))
+        // throw { data: { code: 'TEST_ERROR' } } as any
+        await offerService.createOffer(payload)
+        setAlert({
+          severity: snackbarVariants.success,
+          message: t(`offerPage.createOffer.successMessage.${userRole}`)
+        })
+        closeDrawer()
+      } catch (error) {
+        const errorData = error as { data: { code: string } }
+        setAlert({
+          severity: snackbarVariants.error,
+          message: `errors.${errorData.data.code}`
+        })
+      } finally {
+        setIsSubmitting(false)
+      }
     },
     validations,
     submitWithData: true
   })
+
+  const commonStepProps = {
+    data,
+    errors,
+    t,
+    userRole: userRole as UserRoleEnum,
+    handleNonInputValueChange: handleNonInputValueChange as (
+      key: keyof OfferFormData,
+      value: unknown
+    ) => void
+  }
 
   return (
     <Box
@@ -87,52 +139,19 @@ const OfferRequestForm = () => {
       </Typography>
 
       <FirstStepSpecialization
-        data={data}
-        errors={errors}
+        {...commonStepProps}
         handleBlur={handleBlur}
         handleErrors={handleErrors}
-        handleNonInputValueChange={
-          handleNonInputValueChange as (
-            key: keyof OfferFormData,
-            value: unknown
-          ) => void
-        }
-        t={t}
-        userRole={userRole}
       />
 
-      <SecondStepParameters
-        data={data}
-        errors={errors}
-        handleBlur={handleBlur}
-        handleNonInputValueChange={
-          handleNonInputValueChange as (
-            key: keyof OfferFormData,
-            value: unknown
-          ) => void
-        }
-        t={t}
-        userRole={userRole}
-      />
+      <SecondStepParameters {...commonStepProps} handleBlur={handleBlur} />
 
-      <ThirdStepFaq
-        data={data}
-        errors={errors}
-        handleErrors={handleErrors}
-        handleNonInputValueChange={
-          handleNonInputValueChange as (
-            key: keyof OfferFormData,
-            value: unknown
-          ) => void
-        }
-        t={t}
-        userRole={userRole}
-      />
+      <ThirdStepFaq {...commonStepProps} handleErrors={handleErrors} />
 
       {/* Footer */}
       <Box sx={styles.footer}>
         <AppButton
-          disabled={!isFormValid(data, errors, isDirty)}
+          disabled={!isFormValid(data, errors, isDirty) || isSubmitting}
           fullWidth
           type={ButtonTypeEnum.Submit}
         >

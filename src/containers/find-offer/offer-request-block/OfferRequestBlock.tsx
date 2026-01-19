@@ -33,7 +33,7 @@ const OfferRequestBlock = () => {
         </AppButton>
       </TitleBlock>
       <AppDrawer onClose={closeDrawer} open={isOpen}>
-        <OfferRequestForm />
+        <OfferRequestForm closeDrawer={closeDrawer} />
       </AppDrawer>
     </>
   )

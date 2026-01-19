@@ -8,7 +8,7 @@ import { emptyField, textField } from '~/utils/validations/common'
 
 export interface OfferFormData {
   price?: number
-  proficiencyLevel: ProficiencyLevelEnum[]
+  proficiencyLevel: ProficiencyLevelEnum | ''
   title?: string
   description: string
   languages: LanguagesEnum[]
@@ -39,10 +39,7 @@ export const IMAGES = {
 
 export const FIELD_LIMITS = {
   TITLE_MAX_LENGTH: 100,
-  DESCRIPTION_MAX_LENGTH: {
-    TUTOR: 1000,
-    STUDENT: 2000
-  },
+  DESCRIPTION_MAX_LENGTH: 2000,
   QUESTION_MAX_LENGTH: 200,
   ANSWER_MAX_LENGTH: 400
 }
@@ -103,7 +100,7 @@ export const isFormValid = (
     isDirty &&
     !!data.category &&
     !!data.subject &&
-    data.proficiencyLevel.length > 0 &&
+    !!data.proficiencyLevel &&
     data.description.trim() !== '' &&
     data.languages.length > 0 &&
     !!data.title &&
@@ -119,15 +116,14 @@ export const validations = {
     emptyField(value, 'offerPage.errorMessages.category'),
   subject: (value: string | null) =>
     emptyField(value, 'offerPage.errorMessages.subject'),
-  proficiencyLevel: (value: ProficiencyLevelEnum[] | string) => {
-    const arr = Array.isArray(value) ? value : []
-    return arr.length > 0 ? '' : 'offerPage.errorMessages.level'
+  proficiencyLevel: (value: ProficiencyLevelEnum | string) => {
+    return value && value !== '' ? '' : 'offerPage.errorMessages.level'
   },
   description: (value: string) =>
     emptyField(
       value,
       'offerPage.errorMessages.description',
-      textField(10, 2000)(value)
+      textField(10, FIELD_LIMITS.DESCRIPTION_MAX_LENGTH)(value)
     ),
   languages: (value: LanguagesEnum[] | string) => {
     const arr = Array.isArray(value) ? value : []

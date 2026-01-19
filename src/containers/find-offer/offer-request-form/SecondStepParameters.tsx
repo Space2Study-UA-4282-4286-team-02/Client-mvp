@@ -65,24 +65,15 @@ const SecondStepParameters = ({
   const languages = Object.values(LanguagesEnum)
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false)
 
-  const handleLanguageSelectOpen = useCallback(
-    () => setIsLanguageSelectOpen(true),
-    []
-  )
+  const handleLanguageSelectOpen = () => setIsLanguageSelectOpen(true)
 
-  const handleLanguageSelectClose = useCallback(
-    () => setIsLanguageSelectOpen(false),
-    []
-  )
+  const handleLanguageSelectClose = () => setIsLanguageSelectOpen(false)
 
-  const handleLanguageChange = useCallback(
-    (newValue: LanguagesEnum | LanguagesEnum[]) => {
-      const selectedArray = handleLanguageSelection(newValue)
-      handleNonInputValueChange('languages', selectedArray)
-      setIsLanguageSelectOpen(false)
-    },
-    [handleNonInputValueChange]
-  )
+  const handleLanguageChange = (newValue: LanguagesEnum | LanguagesEnum[]) => {
+    const selectedArray = handleLanguageSelection(newValue)
+    handleNonInputValueChange('languages', selectedArray)
+    setIsLanguageSelectOpen(false)
+  }
 
   const renderLanguageChips = () => (
     <Box sx={styles.chips.container}>
@@ -128,11 +119,7 @@ const SecondStepParameters = ({
           <AppTextArea
             errorMsg={errors.description ? t(errors.description) : undefined}
             fullWidth
-            maxLength={
-              userRole === UserRoleEnum.Student
-                ? FIELD_LIMITS.DESCRIPTION_MAX_LENGTH.STUDENT
-                : FIELD_LIMITS.DESCRIPTION_MAX_LENGTH.TUTOR
-            }
+            maxLength={FIELD_LIMITS.DESCRIPTION_MAX_LENGTH}
             onBlur={handleBlur('description')}
             onChange={(e) =>
               handleNonInputValueChange('description', e.target.value)
