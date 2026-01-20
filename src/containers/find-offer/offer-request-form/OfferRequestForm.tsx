@@ -96,11 +96,12 @@ const OfferRequestForm = ({ closeDrawer }: Props) => {
           message: t(`offerPage.createOffer.successMessage.${userRole}`)
         })
         closeDrawer()
-      } catch (error) {
-        const errorData = error as { data: { code: string } }
+      } catch (err) {
+        const code =
+          (err as { data?: { code?: string } })?.data?.code ?? 'UNKNOWN_ERROR'
         setAlert({
           severity: snackbarVariants.error,
-          message: `errors.${errorData.data.code}`
+          message: `errors.${code}`
         })
       } finally {
         setIsSubmitting(false)

@@ -43,13 +43,13 @@ export const styles = {
         display: 'flex',
         flexDirection: 'column',
         gap: '12px',
-        pl: '34px'
+        pl: { xs: '10px', sm: '23px', md: '34px' }
       },
       compact: {
         display: 'flex',
         flexDirection: 'column',
         gap: '0px',
-        pl: '34px'
+        pl: { xs: '10px', sm: '23px', md: '34px' }
       }
     }
   },
@@ -96,7 +96,7 @@ export const styles = {
     container: {
       display: 'flex',
       flexDirection: 'row',
-      gap: '12px',
+      gap: '6px',
       alignItems: 'flex-start'
     },
     fieldsWrapper: {
