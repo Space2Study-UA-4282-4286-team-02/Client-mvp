@@ -88,8 +88,6 @@ const OfferRequestForm = ({ closeDrawer }: Props) => {
       }
 
       try {
-        // await new Promise((r) => setTimeout(r, 2000))
-        // throw { data: { code: 'TEST_ERROR' } } as any
         await offerService.createOffer(payload)
         setAlert({
           severity: snackbarVariants.success,

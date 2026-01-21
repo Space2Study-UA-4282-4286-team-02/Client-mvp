@@ -1,4 +1,4 @@
-import { SyntheticEvent, useMemo } from 'react'
+import { SyntheticEvent, useCallback, useMemo } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Radio from '@mui/material/Radio'
@@ -43,6 +43,11 @@ const FirstStepSpecialization = ({
   handleNonInputValueChange,
   handleErrors
 }: Props) => {
+  const subjectServiceCallback = useCallback(
+    () => subjectService.getSubjectsNames(data.category as string),
+    [data.category]
+  )
+
   const handleCategoryChange = (
     event: SyntheticEvent,
     value: CategoryNameInterface | null
@@ -109,9 +114,7 @@ const FirstStepSpecialization = ({
             labelField='name'
             onBlur={handleBlur('subject')}
             onChange={handleSubjectChange}
-            service={() =>
-              subjectService.getSubjectsNames(data.category as string)
-            }
+            service={subjectServiceCallback}
             textFieldProps={{
               label: t('offerPage.labels.subject'),
               error: Boolean(errors.subject),
