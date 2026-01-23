@@ -1,4 +1,4 @@
-import { styles } from '~/containers/category-item-list/CategoryItemList.styles'
+import { styles } from '~/components/category-item-list/CategoryItemList.styles'
 import CategoryItem from '~/components/category-item/CategoryItem'
 import imgIconGlobe from '~/assets/img/categories/globe-icon.svg'
 import imgIconHash from '~/assets/img/categories/hash-icon.svg'
