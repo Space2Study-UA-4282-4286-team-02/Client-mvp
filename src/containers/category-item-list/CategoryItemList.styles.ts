@@ -16,14 +16,5 @@ export const styles = {
     gridTemplateColumns: '1fr',
     alignItems: 'center',
     gap: '24px'
-  },
-  buttonViewMore: {
-    backgroundColor: 'basic.grey',
-    color: 'basic.blueGray900',
-    width: 'max-content',
-    margin: '30px auto',
-    '&:hover': {
-      backgroundColor: 'basic.turquoiseChat'
-    }
   }
 }
