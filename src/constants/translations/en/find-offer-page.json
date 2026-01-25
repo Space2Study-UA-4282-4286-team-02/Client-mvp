@@ -54,6 +54,10 @@
   "otherOffers":{
     "title":"Other offers"
   },
+  "loading": "Loading...",
+  "errors": {
+    "loadingOffers": "Error while loading offers"
+  },
   "item": {
     "subject": "Subject:",
     "category": "Category:"

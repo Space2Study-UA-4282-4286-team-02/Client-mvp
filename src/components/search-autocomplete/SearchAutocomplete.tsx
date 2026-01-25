@@ -66,11 +66,7 @@ const SearchAutocomplete = ({
 
   const callOnSearchChange = (value?: string) => {
     if (!onSearchChange) return
-    try {
-      onSearchChange(value)
-    } catch {
-      onSearchChange()
-    }
+    onSearchChange(value)
   }
 
   const onInputChange = (_: any, value: string) => {

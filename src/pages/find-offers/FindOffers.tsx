@@ -85,6 +85,8 @@ const FindOffers = () => {
     setMatch(finalName)
   }
 
+  const searchParamsKey = searchParams.toString()
+
   useEffect(() => {
     let mounted = true
 
@@ -123,7 +125,7 @@ const FindOffers = () => {
       } catch (err: any) {
         if (!mounted) return
         console.error('[FindOffers.load] error ->', err)
-        setErrorOffers(err?.message || 'Error while loading offers')
+        setErrorOffers(err?.message || t('findOffers.errors.loadingOffers'))
       } finally {
         if (mounted) setLoadingOffers(false)
       }
@@ -133,7 +135,7 @@ const FindOffers = () => {
     return () => {
       mounted = false
     }
-  }, [searchParams.toString()])
+  }, [searchParamsKey])
 
   return (
     <PageWrapper>
