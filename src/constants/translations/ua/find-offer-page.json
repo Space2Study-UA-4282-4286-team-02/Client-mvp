@@ -12,8 +12,12 @@
     "description": "Відкрийте для себе пропозиції у вашій області інтересів"
   },
   "backToAllSubjects": "Повернутися до всіх предметів",
+  "backToAllCategories": "Повернутися до всіх категорій",
   "searchToolbar": {
     "label": "Пошук за іменем репетитора"
+  },
+  "subjectAutocomplete": {
+    "label": "Предмет"
   },
   "topMenu": {
     "tutorsOffers": "Пропозиції репетитора",
@@ -43,9 +47,20 @@
     "rating": "Рейтингом",
     "priceAsc": "Ціною від низької до високої",
     "priceDesc": "Ціною від високої до низької",
-    "name":"Ім'ям"
+    "name": "Ім'ям"
   },
-  "otherOffers":{
-    "title":"Інші пропозиції"
+  "notFound": {
+    "description": "Ми не змогли знайти те, що ви шукали."
+  },
+  "otherOffers": {
+    "title": "Інші пропозиції"
+  },
+  "loading": "Завантаження...",
+  "errors": {
+    "loadingOffers": "Помилка під час завантаження пропозицій"
+  },
+  "item": {
+    "subject": "Предмет:",
+    "category": "Категорія:"
   }
 }

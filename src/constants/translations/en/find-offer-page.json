@@ -12,8 +12,12 @@
     "description": "Discover offers in your area of interest"
   },
   "backToAllSubjects": "Back to all subjects",
+  "backToAllCategories": "Back to all categories",
   "searchToolbar": {
     "label": "Search by tutor name"
+  },
+  "subjectAutocomplete": {
+    "label": "Subject"
   },
   "topMenu": {
     "tutorsOffers": "Tutors’ offers",
@@ -49,5 +53,13 @@
   },
   "otherOffers":{
     "title":"Other offers"
+  },
+  "loading": "Loading...",
+  "errors": {
+    "loadingOffers": "Error while loading offers"
+  },
+  "item": {
+    "subject": "Subject:",
+    "category": "Category:"
   }
 }
