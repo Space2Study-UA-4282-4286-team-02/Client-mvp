@@ -3,6 +3,7 @@ export const URLs = {
     get: '/example'
   },
   auth: {
+    me: '/auth/me',
     login: '/auth/login',
     googleAuth: '/auth/google-auth',
     signup: '/auth/signup',
@@ -11,6 +12,10 @@ export const URLs = {
     confirm: '/auth/confirm-email',
     forgotPassword: '/auth/forgot-password',
     resetPassword: '/auth/reset-password'
+  },
+  location: {
+    getCountries: '/locations/countries',
+    getCities: '/locations/cities'
   },
   users: {
     get: '/users',
