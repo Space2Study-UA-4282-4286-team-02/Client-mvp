@@ -18,5 +18,9 @@ export const styles = {
       lineHeight: 'inherit',
       color: 'primary.500'
     }
+  },
+  helperText: {
+    fontSize: '12px',
+    mt: '4px'
   }
 }

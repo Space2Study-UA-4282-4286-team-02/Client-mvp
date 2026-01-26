@@ -13,6 +13,10 @@ export const URLs = {
     forgotPassword: '/auth/forgot-password',
     resetPassword: '/auth/reset-password'
   },
+  offers: {
+    get: '/offers',
+    post: '/offers'
+  },
   location: {
     getCountries: '/locations/countries',
     getCities: '/locations/cities'

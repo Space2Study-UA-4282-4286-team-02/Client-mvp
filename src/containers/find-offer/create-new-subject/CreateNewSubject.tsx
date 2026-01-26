@@ -49,7 +49,8 @@ const CreateSubjectModal = () => {
     closeModal()
   }
 
-  const sendSubjectRequest = (): Promise<AxiosResponse> => null
+  const sendSubjectRequest = (): Promise<AxiosResponse> =>
+    Promise.resolve({} as AxiosResponse)
 
   const { loading, fetchData } = useAxios({
     service: sendSubjectRequest,
@@ -73,7 +74,7 @@ const CreateSubjectModal = () => {
       category: '',
       info: ''
     },
-    onSubmit: fetchData,
+    onSubmit: async () => await fetchData(),
     validations
   })
 

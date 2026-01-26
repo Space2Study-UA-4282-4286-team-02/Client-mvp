@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect } from 'vitest'
 
@@ -18,11 +18,9 @@ const props = {
 }
 
 describe('AddResourceWithInput test', () => {
-  beforeEach(async () => {
-    await waitFor(() => {
-      renderWithProviders(<AddResourceWithInput {...props} />, {
-        initialEntries: route
-      })
+  beforeEach(() => {
+    renderWithProviders(<AddResourceWithInput {...props} />, {
+      initialEntries: route
     })
   })
 
@@ -39,7 +37,7 @@ describe('AddResourceWithInput test', () => {
 
     const searchInput = screen.getByPlaceholderText('common.search')
 
-    await waitFor(() => user.type(searchInput, text))
+    await user.type(searchInput, text)
 
     expect(searchInput.value).toBe(text)
 
