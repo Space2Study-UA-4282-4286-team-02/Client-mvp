@@ -11,6 +11,7 @@ import { AxiosError } from 'axios'
 import { AccessToken, ErrorResponse, UserRole } from '~/types'
 
 interface UserState {
+  accessToken: string
   userId: string
   userRole: UserRole | ''
   authLoading: boolean
@@ -21,6 +22,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
+  accessToken: '',
   userId: '',
   userRole: '',
   authLoading: false,
@@ -61,6 +63,8 @@ export const mainSlice = createSlice({
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<string>) {
+      state.accessToken = action.payload
+
       const userData: AccessToken = parseJwt(action.payload)
       state.userId = userData.id
       state.userRole = userData.role
@@ -70,6 +74,7 @@ export const mainSlice = createSlice({
       state.userId = initialState.userId
       state.userRole = initialState.userRole
       state.isFirstLogin = initialState.isFirstLogin
+      state.accessToken = initialState.accessToken
     },
     markFirstLoginComplete(state) {
       state.isFirstLogin = false

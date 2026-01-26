@@ -19,6 +19,36 @@ const StepWrapper = ({ children, steps }) => {
   const { next, back, setActiveStep, handleSubmit } = stepOperation
   const { t } = useTranslation()
 
+  const BtnsBox = ({ disabled, onClick }) => (
+    <Box sx={styles.btnWrapper}>
+      <AppButton
+        disabled={activeStep === 0}
+        onClick={back}
+        size='small'
+        sx={styles.btn}
+        variant='outlined'
+      >
+        <WestIcon fontSize='small' />
+        {t('common.back')}
+      </AppButton>
+
+      <AppButton
+        disabled={disabled}
+        loading={loading}
+        onClick={() => {
+          if (onClick) onClick()
+          isLastStep ? handleSubmit() : next()
+        }}
+        size='small'
+        sx={isLastStep ? styles.finishBtn : styles.btn}
+        variant='contained'
+      >
+        {isLastStep ? t('common.finish') : t('common.next')}
+        {!isLastStep && <EastIcon fontSize='small' />}
+      </AppButton>
+    </Box>
+  )
+
   const stepLabels = steps.map((step, index) => (
     <Box
       color={stepErrors[index] ? 'error.500' : 'primary.500'}
@@ -31,45 +61,12 @@ const StepWrapper = ({ children, steps }) => {
     </Box>
   ))
 
-  const nextButton = isLastStep ? (
-    <AppButton
-      loading={loading}
-      onClick={handleSubmit}
-      size='small'
-      sx={styles.finishBtn}
-      variant='contained'
-    >
-      {t('common.finish')}
-    </AppButton>
-  ) : (
-    <AppButton onClick={next} size='small' sx={styles.btn} variant='contained'>
-      {t('common.next')}
-      <EastIcon fontSize='small' />
-    </AppButton>
-  )
-
-  const btnsBox = (
-    <Box sx={styles.btnWrapper}>
-      <AppButton
-        disabled={activeStep === 0}
-        onClick={back}
-        size='small'
-        sx={styles.btn}
-        variant='outlined'
-      >
-        <WestIcon fontSize='small' />
-        {t('common.back')}
-      </AppButton>
-      {nextButton}
-    </Box>
-  )
-
   return (
     <Container sx={styles.root}>
       <Box sx={styles.steps}>{stepLabels}</Box>
       <Box sx={styles.stepContent}>
         {cloneElement(children[activeStep], {
-          btnsBox,
+          btnsBox: <BtnsBox />,
           stepLabel: steps[activeStep]
         })}
       </Box>

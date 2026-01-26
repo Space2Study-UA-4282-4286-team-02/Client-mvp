@@ -1,8 +1,8 @@
 {
   "generalInfo": {
-    "title": "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
+    "title": "Please complete the registration form for the best possible experience.",
     "textFieldLabel": "Describe in short your professional status",
-    "helperText": "Inputs with the * sign are required"
+    "helperText": "Inputs with the * sign are required."
   },
   "experience": {
     "title": "Describe your professional experience. Maximum 70 characters.",
