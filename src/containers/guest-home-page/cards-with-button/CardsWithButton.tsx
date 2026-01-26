@@ -36,7 +36,10 @@ const CardsWithButton: FC<CardsWithButtonProps> = ({
   const { openModal } = useModalContext()
 
   const openSignup = (role: UserRoleEnum) => {
-    openModal({ component: <SignupDialog role={role} /> })
+    openModal({
+      component: <SignupDialog role={role} />,
+      requireConfirmOnClose: true
+    })
   }
 
   const cards = (state: TransitionChildren) =>

@@ -3,13 +3,13 @@ import { vi } from 'vitest'
 
 import PopupDialog from '~/components/popup-dialog/PopupDialog'
 
-const closeModal = vi.fn()
 const closeModalAfterDelay = vi.fn()
+const onCloseAttempt = vi.fn()
 
 const props = {
   content: 'test',
-  closeModal,
   closeModalAfterDelay,
+  onCloseAttempt,
   timerId: null,
   paperProps: {}
 }
@@ -36,7 +36,7 @@ describe('Popup dialog test', () => {
 
     fireEvent.click(closeButton)
 
-    expect(closeModal).toHaveBeenCalled()
+    expect(onCloseAttempt).toHaveBeenCalled()
   })
 })
 

@@ -20,7 +20,8 @@ const TutorHome = () => {
         component: <UserStepsWrapper userRole={userRole} />,
         paperProps: {
           sx: styles.modal
-        }
+        },
+        requireConfirmOnClose: true
       })
     }
   }, [openModal, isFirstLogin, userRole])
