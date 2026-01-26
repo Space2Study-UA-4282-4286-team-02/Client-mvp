@@ -24,7 +24,8 @@ const StudentHome = () => {
             maxWidth: '1130px',
             width: '100%'
           }
-        }
+        },
+        requireConfirmOnClose: true
       })
     }
   }, [openModal, isFirstLogin, userRole])

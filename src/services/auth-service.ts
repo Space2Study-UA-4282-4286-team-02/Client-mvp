@@ -12,7 +12,8 @@ import {
   LoginParams,
   LoginResponse,
   SignupParams,
-  SignupResponse
+  SignupResponse,
+  UserResponse
 } from '~/types'
 
 const { POST } = ApiMethodEnum
@@ -39,6 +40,9 @@ export const AuthService = {
 
 export const authService = appApi.injectEndpoints({
   endpoints: (build) => ({
+    getMe: build.query<UserResponse, void>({
+      query: () => ({ url: URLs.auth.me, method: 'GET' })
+    }),
     signUp: build.mutation<SignupResponse, SignupParams>({
       query: (body) => ({ url: URLs.auth.signup, method: POST, body })
     }),
@@ -78,5 +82,6 @@ export const {
   useSignUpMutation,
   useLoginMutation,
   useGoogleAuthMutation,
-  useLogoutMutation
+  useLogoutMutation,
+  useGetMeQuery
 } = authService

@@ -169,11 +169,13 @@ const SecondStepParameters = ({
               fullWidth
               onBlur={handleBlur('price')}
               onChange={(e) => {
-                const value = e.target.value ? parseInt(e.target.value, 10) : 0
+                const value = e.target.value
+                  ? parseInt(e.target.value, 10)
+                  : null
                 handleNonInputValueChange('price', value)
               }}
               type='number'
-              value={data.price || ''}
+              value={data.price ?? ''}
             />
           </Box>
         </Box>

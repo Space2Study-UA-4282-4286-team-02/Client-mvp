@@ -40,6 +40,8 @@
   "fileSizeError": "Розмір одного файлу не може перевищувати 10 Мб.",
   "noItems": "No items found",
   "view": "View",
+  "confirmCloseTitle": "Please Confirm",
+  "confirmCloseMessage": "Are you certain you want to close? Any unsaved changes will be lost",
   "labels": {
     "email": "Email",
     "firstName": "First name",

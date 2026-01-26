@@ -9,19 +9,19 @@ import useBreakpoints from '~/hooks/use-breakpoints'
 import { styles } from '~/components/popup-dialog/PopupDialog.styles'
 
 interface PopupDialogProps {
-  closeModal: () => void
   content: React.ReactNode
   paperProps: PaperProps
   timerId: NodeJS.Timeout | null
   closeModalAfterDelay: (delay?: number) => void
+  onCloseAttempt: () => void
 }
 
 const PopupDialog: FC<PopupDialogProps> = ({
-  closeModal,
   content,
   paperProps,
   timerId,
-  closeModalAfterDelay
+  closeModalAfterDelay,
+  onCloseAttempt
 }) => {
   const { isMobile } = useBreakpoints()
   const handleClose: DialogProps['onClose'] = (_event, reason) => {
@@ -51,7 +51,7 @@ const PopupDialog: FC<PopupDialogProps> = ({
       >
         <IconButton
           aria-label='close popup'
-          onClick={closeModal}
+          onClick={onCloseAttempt}
           sx={styles.icon}
         >
           <CloseIcon />

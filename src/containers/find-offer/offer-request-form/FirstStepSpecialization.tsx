@@ -138,7 +138,7 @@ const FirstStepSpecialization = ({
                 control={
                   <Radio
                     sx={{
-                      color: errors.proficiencyLevel ? '#F54636' : undefined
+                      color: errors.proficiencyLevel ? 'error.main' : undefined
                     }}
                   />
                 }
