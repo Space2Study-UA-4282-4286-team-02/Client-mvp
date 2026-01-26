@@ -1,3 +1,4 @@
+import type { AxiosError } from 'axios'
 import { FC, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box, Typography } from '@mui/material'
@@ -71,7 +72,8 @@ const SignupDialog: FC<SignupDialogProps> = ({ role }) => {
         )
       } catch (err) {
         const code =
-          (err as { data?: { code?: string } })?.data?.code ?? 'UNKNOWN_ERROR'
+          (err as AxiosError<{ code?: string }>)?.response?.data?.code ??
+          'UNKNOWN_ERROR'
         setAlert({
           severity: snackbarVariants.error,
           message: `errors.${code}`

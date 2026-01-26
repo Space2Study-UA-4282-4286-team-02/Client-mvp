@@ -86,13 +86,12 @@ describe('SecondStepParameters test', () => {
     expect(handleNonInputValueChange).toHaveBeenCalledTimes(15)
   })
 
-  it('should call handleNonInputValueChange when price changes', async () => {
-    const user = userEvent.setup()
+  it('should call handleNonInputValueChange when price changes', () => {
     const priceInput = screen.getByRole('spinbutton')
 
-    await user.type(priceInput, '100')
+    fireEvent.change(priceInput, { target: { value: '100' } })
 
-    expect(handleNonInputValueChange).toHaveBeenCalledTimes(3)
+    expect(handleNonInputValueChange).toHaveBeenCalledWith('price', 100)
   })
 })
 

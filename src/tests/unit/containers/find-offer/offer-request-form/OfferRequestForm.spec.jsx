@@ -13,13 +13,13 @@ vi.mock('~/services/offer-service', () => ({
 
 vi.mock('~/services/category-service', () => ({
   categoryService: {
-    getCategories: vi.fn(() => Promise.resolve({ items: [] }))
+    getCategoriesNames: vi.fn(() => Promise.resolve({ data: [] }))
   }
 }))
 
 vi.mock('~/services/subject-service', () => ({
   subjectService: {
-    getSubjectsNames: vi.fn(() => Promise.resolve({ items: [] }))
+    getSubjectsNames: vi.fn(() => Promise.resolve({ data: [] }))
   }
 }))
 

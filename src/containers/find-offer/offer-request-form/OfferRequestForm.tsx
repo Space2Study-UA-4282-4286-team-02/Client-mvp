@@ -1,3 +1,4 @@
+import type { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -59,7 +60,7 @@ const OfferRequestForm = ({ closeDrawer }: Props) => {
       description: '',
       languages: [] as LanguagesEnum[],
       title: '',
-      price: 0,
+      price: null as number | null,
       FAQ: [{ question: '', answer: '' }]
     } as OfferFormData,
     onSubmit: async (formData?: OfferFormData) => {
@@ -96,10 +97,11 @@ const OfferRequestForm = ({ closeDrawer }: Props) => {
         closeDrawer()
       } catch (err) {
         const code =
-          (err as { data?: { code?: string } })?.data?.code ?? 'UNKNOWN_ERROR'
+          (err as AxiosError<{ code?: string }>)?.response?.data?.code ??
+          'UNKNOWN_ERROR'
         setAlert({
           severity: snackbarVariants.error,
-          message: `errors.${code}`
+          message: t(`errors.${code}`)
         })
       } finally {
         setIsSubmitting(false)
