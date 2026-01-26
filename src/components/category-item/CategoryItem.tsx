@@ -31,13 +31,6 @@ const CategoryItem: FC<CategoryItemProps> = ({
         title={title}
       />
     </AppCard>
-    // <CardWithLink
-    //   color={color}
-    //   description={`${offers} ${t('categoriesPage.offers')}`}
-    //   img={img}
-    //   link={link}
-    //   title={title}
-    // />
   )
 }
 
