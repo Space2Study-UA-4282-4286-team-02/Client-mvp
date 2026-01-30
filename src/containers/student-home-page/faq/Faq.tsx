@@ -15,6 +15,11 @@ import { TypographyVariantEnum } from '~/types'
 const Faq = () => {
   const { t } = useTranslation()
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
+
+  const handleAccordionChange = (index: number) => {
+    setActiveItemId(index === activeItemId ? null : index)
+  }
+
   return (
     <Box
       className='section'
@@ -31,7 +36,7 @@ const Faq = () => {
         descriptionVariant={TypographyVariantEnum.Body2}
         icon={<ExpandMoreRoundedIcon />}
         items={accordionItems}
-        onChange={(id) => setActiveItemId(id === activeItemId ? null : id)}
+        onChange={handleAccordionChange}
         titleVariant={TypographyVariantEnum.H6}
       />
     </Box>

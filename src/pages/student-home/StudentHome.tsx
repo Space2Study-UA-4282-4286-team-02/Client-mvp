@@ -28,15 +28,7 @@ const StudentHome = () => {
   }, [openModal, isFirstLogin, userRole])
 
   return (
-    <PageWrapper
-      data-testid='studentHome'
-      sx={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '80px'
-      }}
-    >
+    <PageWrapper data-testid='studentHome' sx={styles.pageWrapper}>
       <FindBlock translationKey={translationKey} />
       <Faq />
     </PageWrapper>
