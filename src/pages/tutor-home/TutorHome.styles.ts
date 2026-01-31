@@ -4,5 +4,9 @@ export const styles = {
     height: '100%',
     maxWidth: '1130px',
     width: '100%'
+  },
+  pageWrapper: {
+    flex: 1,
+    gap: '80px'
   }
 }

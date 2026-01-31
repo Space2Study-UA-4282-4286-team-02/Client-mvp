@@ -16,7 +16,11 @@ import { defaultResponses, popularCategoriesLimit } from '~/constants'
 
 import { styles } from './PopularCategories.styles'
 
-const PopularCategories = () => {
+interface PopularCategoriesProps {
+  translationKey: string
+}
+
+const PopularCategories = ({ translationKey }: PopularCategoriesProps) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -59,12 +63,12 @@ const PopularCategories = () => {
   return (
     <Box sx={styles.container}>
       <TitleWithDescription
-        description={t('studentHomePage.popularCategories.description')}
+        description={t(`${translationKey}.description`)}
         style={styles.titleWithDescription}
-        title={t('studentHomePage.popularCategories.title')}
+        title={t(`${translationKey}.title`)}
       />
       <CardsList
-        btnText={t('studentHomePage.popularCategories.viewMore')}
+        btnText={t(`${translationKey}.showAll`)}
         cards={cards}
         isExpandable
         loading={loading}
