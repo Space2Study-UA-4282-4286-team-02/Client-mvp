@@ -5,13 +5,13 @@ export const styles = {
   titleWithDescription: {
     wrapper: {
       textAlign: 'center',
-      mb: '32px'
+      mb: { xs: '16px', sm: '32px' }
     },
     title: {
-      typography: { xs: 'h4' }
+      typography: { xs: 'h5', sm: 'h4' }
     },
     description: {
-      typography: { xs: 'subtitle1' }
+      typography: { xs: 'body2', sm: 'body1' }
     }
   }
 }
