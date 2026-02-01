@@ -1,15 +1,15 @@
 import { screen, render } from '@testing-library/react'
 
-import HowItWorksStepBlock from '~/components/howItWorksStepBlock/HowItWorksStepBlock'
+import HowItWorksCard from '~/components/how-it-works-card/HowItWorksCard'
 
-describe('HowItWorksStepBlock component', () => {
+describe('HowItWorksCard component', () => {
   const defaultProps = {
     title: 'Test Title',
     cardWidth: 300
   }
 
   it('should render title', () => {
-    render(<HowItWorksStepBlock {...defaultProps} />)
+    render(<HowItWorksCard {...defaultProps} />)
 
     const title = screen.getByText(defaultProps.title)
 
@@ -18,7 +18,7 @@ describe('HowItWorksStepBlock component', () => {
 
   it('should render description when provided', () => {
     const description = 'Test Description'
-    render(<HowItWorksStepBlock {...defaultProps} description={description} />)
+    render(<HowItWorksCard {...defaultProps} description={description} />)
 
     const descriptionElement = screen.getByText(description)
 
@@ -28,9 +28,7 @@ describe('HowItWorksStepBlock component', () => {
   it('should render image with alt text when provided', () => {
     const imageSrc = '/test-image.png'
     const altText = 'Test Image Alt'
-    render(
-      <HowItWorksStepBlock {...defaultProps} alt={altText} image={imageSrc} />
-    )
+    render(<HowItWorksCard {...defaultProps} alt={altText} image={imageSrc} />)
 
     const image = screen.getByAltText(altText)
 
@@ -41,7 +39,7 @@ describe('HowItWorksStepBlock component', () => {
   it('should apply cardWidth to maxWidth style', () => {
     const cardWidth = 400
     const { container } = render(
-      <HowItWorksStepBlock {...defaultProps} cardWidth={cardWidth} />
+      <HowItWorksCard {...defaultProps} cardWidth={cardWidth} />
     )
 
     const title = screen.getByText(defaultProps.title)
