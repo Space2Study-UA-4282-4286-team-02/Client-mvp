@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 import HowItWorksCard from '~/components/how-it-works-card/HowItWorksCard'
 import AppButton from '../app-button/AppButton'
+import { studentRoutes } from '~/router/constants/studentRoutes'
 import { authRoutes } from '~/router/constants/authRoutes'
 
 import { styles } from './HowItWorksBlock.styles'
@@ -24,7 +25,11 @@ const HowItWorksBlock = ({ translationKey, cards }: HowItWorksBlockProps) => {
   const { t } = useTranslation()
 
   return (
-    <Box className='section' sx={styles.container}>
+    <Box
+      className='section'
+      id={studentRoutes.navBar.howItWorks.route}
+      sx={styles.container}
+    >
       <TitleWithDescription
         description={t(`${translationKey}.description`)}
         style={styles.titleWithDescription}

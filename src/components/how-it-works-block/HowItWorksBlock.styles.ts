@@ -5,10 +5,7 @@ export const styles = {
     pt: { xs: '30px', sm: '32px', md: '64px' },
     pb: { xs: '20px', sm: '24px', md: '48px' },
     backgroundColor: '#FCFFFB',
-    borderRadius: {
-      xs: '16px',
-      md: '20px'
-    },
+    borderRadius: '16px',
     pl: { xs: '16px', sm: '24px', md: '45.5px' },
     pr: { xs: '16px', sm: '24px', md: '45.5px' }
   },
