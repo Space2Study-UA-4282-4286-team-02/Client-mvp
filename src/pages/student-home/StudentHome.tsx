@@ -10,6 +10,7 @@ import Faq from '~/containers/student-home-page/faq/Faq'
 
 import { translationKey } from '~/components/find-block/find-tutor-constants'
 import { howItWorksCards } from '~/containers/student-home-page/student-how-it-works/HowItWorksCards'
+import { studentRoutes } from '~/router/constants/studentRoutes'
 
 const StudentHome = () => {
   const { openModal } = useModalContext()
@@ -37,6 +38,7 @@ const StudentHome = () => {
       <FindBlock translationKey={translationKey} />
       <HowItWorksBlock
         cards={howItWorksCards}
+        id={studentRoutes.navBar.howItWorks.route}
         translationKey='studentHomePage.howItWorks'
       />
       <Faq />

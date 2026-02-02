@@ -1,5 +1,6 @@
 export const styles = {
   container: {
+    display: 'flex',
     flexDirection: 'column',
     gap: { xs: '20px', sm: '32px', md: '48px' },
     pt: { xs: '30px', sm: '32px', md: '64px' },

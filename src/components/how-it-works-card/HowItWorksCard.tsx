@@ -24,7 +24,12 @@ function HowItWorksCard({
 
   return (
     <Box sx={{ ...styles.wrapper, ...(cardWidth && { maxWidth: cardWidth }) }}>
-      <Box alt={alt} component='img' src={image} sx={styles.img} />
+      <Box
+        alt={alt ? String(t(alt)) : undefined}
+        component='img'
+        src={image}
+        sx={styles.img}
+      />
       <TitleWithDescription
         description={description ? t(description) : undefined}
         style={styles.titleWithDescription}
