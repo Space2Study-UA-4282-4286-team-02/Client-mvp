@@ -27,3 +27,5 @@ export const itemsLoadLimit = {
   mobile: 6,
   default: 12
 }
+
+export const popularCategoriesLimit = 8

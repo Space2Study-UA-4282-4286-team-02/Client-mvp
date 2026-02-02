@@ -10,6 +10,6 @@
   "popularCategories": {
     "title": "Popular Categories",
     "description": "Explore tutoring categories you're passionate about.",
-    "viewMore": "View more"
+    "showAll": "Show all categories"
   }
 }
