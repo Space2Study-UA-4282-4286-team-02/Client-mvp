@@ -13,6 +13,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import PageWrapper from '~/components/page-wrapper/PageWrapper'
 import SearchAutocomplete from '~/components/search-autocomplete/SearchAutocomplete'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
+import PopularCategoriesOffers from '~/components/popular-categories-offers/PopularCategories'
 import DirectionLink from '~/components/direction-link/DirectionLink'
 import AppToolbar from '~/components/app-toolbar/AppToolbar'
 import OfferRequestBlock from '~/containers/find-offer/offer-request-block/OfferRequestBlock'
@@ -126,7 +127,8 @@ const FindOffers = () => {
 
         if (!mounted) return
 
-        setOffers(data.items)
+        const items = data.items ?? data ?? []
+        setOffers(Array.isArray(items) ? items : [])
       } catch (err: any) {
         if (!mounted) return
         console.error('[FindOffers.load] error ->', err)
@@ -299,7 +301,6 @@ const FindOffers = () => {
                     })}
                   </span>
                 </Typography>
-               
               </Box>
             ))}
           </Box>
@@ -308,6 +309,8 @@ const FindOffers = () => {
         ) : (
           !errorOffers && <Typography sx={{ color: 'text.secondary' }}>{t('findOffers.notFound.description')}</Typography>
         )}
+
+        <PopularCategoriesOffers />
       </Box>
     </PageWrapper>
   )
