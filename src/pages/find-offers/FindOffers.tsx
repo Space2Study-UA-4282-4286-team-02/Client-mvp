@@ -5,6 +5,10 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Typography from '@mui/material/Typography'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 import PageWrapper from '~/components/page-wrapper/PageWrapper'
 import SearchAutocomplete from '~/components/search-autocomplete/SearchAutocomplete'
@@ -29,13 +33,13 @@ const FindOffers = () => {
   const categoryId = searchParams.get('categoryId') ?? ''
   const subjectId = searchParams.get('subjectId') ?? ''
   const nameQuery = searchParams.get('name') ?? ''
+  const sortQuery = searchParams.get('sort') ?? 'createdAt'
 
   const [match, setMatch] = useState<string>(nameQuery)
   const [isFetchedSubjects, setIsFetchedSubjects] = useState(false)
 
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [offers, setOffers] = useState<any[]>([])
-  const [offersCount, setOffersCount] = useState<number>(0)
   const [loadingOffers, setLoadingOffers] = useState(false)
   const [errorOffers, setErrorOffers] = useState<string | null>(null)
 
@@ -87,6 +91,17 @@ const FindOffers = () => {
     setMatch(finalName)
   }
 
+  const onSortChange = (event: SelectChangeEvent<string>) => {
+    const newParams = new URLSearchParams(searchParams)
+    const value = event.target.value
+
+    if (value) newParams.set('sort', value)
+    else newParams.delete('sort')
+
+    newParams.delete('skip')
+    setSearchParams(newParams)
+  }
+
   const searchParamsKey = searchParams.toString()
 
   useEffect(() => {
@@ -97,16 +112,15 @@ const FindOffers = () => {
       setErrorOffers(null)
 
       try {
-        const params: any = {}
-        const name = searchParams.get('name')
-        const cat = searchParams.get('categoryId')
-        const subj = searchParams.get('subjectId')
-
-        if (name) params.name = name
-        if (cat) params.categoryId = cat
-        if (subj) params.subjectId = subj
-        params.skip = 0
-        params.limit = 50
+        const params: any = {
+          name: searchParams.get('name') || undefined,
+          categoryId: searchParams.get('categoryId') || undefined,
+          subjectId: searchParams.get('subjectId') || undefined,
+          sort: searchParams.get('sort') ?? 'createdAt',
+          authorRole: 'tutor',
+          skip: 0,
+          limit: 50
+        }
 
         console.log(
           '[FindOffers.load] calling offerService.getOffers with params ->',
@@ -117,18 +131,7 @@ const FindOffers = () => {
 
         if (!mounted) return
 
-        if (data && Array.isArray(data.items)) {
-          setOffers(data.items)
-          setOffersCount(
-            typeof data.count === 'number' ? data.count : data.items.length
-          )
-        } else if (Array.isArray(data)) {
-          setOffers(data)
-          setOffersCount(data.length)
-        } else {
-          setOffers(Array.isArray(data?.items) ? data.items : [])
-          setOffersCount((data && data.count) || 0)
-        }
+        setOffers(data.items)
       } catch (err: any) {
         if (!mounted) return
         console.error('[FindOffers.load] error ->', err)
@@ -142,7 +145,34 @@ const FindOffers = () => {
     return () => {
       mounted = false
     }
-  }, [searchParamsKey])
+  }, [searchParamsKey, t])
+
+  const sortOptions = [
+    { value: 'createdAt', label: t('findOffers.sortTitles.newest') },
+    { value: 'rating', label: t('findOffers.sortTitles.rating') },
+    { value: 'priceAsc', label: t('findOffers.sortTitles.priceAsc') },
+    { value: 'priceDesc', label: t('findOffers.sortTitles.priceDesc') }
+  ]
+
+  const renderSortSelect = () => (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+        {t('common.labels.sortBy')}
+      </Typography>
+      <FormControl size='small' sx={{ minWidth: 180 }}>
+        <Select
+          onChange={onSortChange}
+          value={sortQuery}
+        >
+          {sortOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
+  )
 
   return (
     <PageWrapper>
@@ -232,13 +262,19 @@ const FindOffers = () => {
         </Box>
       )}
 
-      <ViewSwitcher changeMode={setViewMode} mode={viewMode} />
-
       <Box
         sx={{
-          mt: 3
+          mt: breakpoints.isMobile ? 2 : 3,
+          display: 'flex',
+          justifyContent: breakpoints.isMobile ? 'flex-start' : 'flex-end'
         }}
       >
+        <Box sx={{ width: breakpoints.isMobile ? '100%' : 'auto', maxWidth: breakpoints.isMobile ? 240 : 'none' }}>
+          {renderSortSelect()}
+        </Box>
+      </Box>
+
+      <Box sx={{ mt: 3 }}>
         {errorOffers && <Typography color='error'>{errorOffers}</Typography>}
 
         {offers.length > 0 ? (
@@ -251,28 +287,35 @@ const FindOffers = () => {
             }}
           >
             {offers.map((o: any) => (
-              <Box
-                key={o._id}
-                sx={{ mb: 2, p: 2, border: '1px solid #eee', borderRadius: 1 }}
-              >
-                <Typography variant='subtitle1'>
-                  {o.title ?? o.name ?? '-'}
-                </Typography>
+              <Box key={o._id} sx={{ mb: 2, p: 2, border: '1px solid #eee', borderRadius: 1 }}>
+                <Typography variant='subtitle1'>{o.title}</Typography>
 
-                <Typography sx={{ mt: 1 }} variant='body2'>
-                  <strong>{t('findOffers.item.subject')}</strong>{' '}
-                  {o.subject?.name ?? o.subjectName ?? '-'}{' '}
+                <Typography variant='body2' sx={{ mt: 1 }}>
+                  <strong>{t('findOffers.item.subject')}</strong> {o.subject.name}{' '}
                   <span style={{ marginLeft: 12 }}>
-                    <strong>{t('findOffers.item.category')}</strong>{' '}
-                    {o.category?.name ?? o.categoryName ?? '-'}
+                    <strong>{t('findOffers.item.category')}</strong> {o.category.name}
                   </span>
                 </Typography>
 
-                <Typography sx={{ mt: 1 }} variant='body2'>
-                  {o.author
-                    ? `${o.author.lastName ?? '-'}, ${o.author.firstName ?? '-'}`
-                    : '-'}
+                <Typography variant='body2' sx={{ mt: 1 }}>
+                  {o.author.lastName}, {o.author.firstName}
                 </Typography>
+
+                <Typography variant='body2' sx={{ mt: 1 }}>
+                  <strong>Rating:</strong> {o.author.averageRating.tutor}
+                  <span style={{ marginLeft: 12 }}>
+                    <strong>Price:</strong> {new Intl.NumberFormat('en-US').format(o.price)}
+                  </span>
+                  <span style={{ marginLeft: 12 }}>
+                    <strong>Date created:</strong>{' '}
+                    {new Date(o.createdAt).toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </span>
+                </Typography>
+               
               </Box>
             ))}
           </Box>

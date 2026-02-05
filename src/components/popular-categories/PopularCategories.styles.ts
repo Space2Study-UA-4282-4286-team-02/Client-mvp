@@ -1,6 +1,8 @@
 export const styles = {
   container: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    pt: { xs: '0px', sm: '14px' },
+    pb: { xs: '0px', sm: '33px' }
   },
   titleWithDescription: {
     wrapper: {
