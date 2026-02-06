@@ -10,35 +10,35 @@ import imgIconPainting from '~/assets/img/categories/painting-icon.svg'
 import imgIconStar from '~/assets/img/categories/star-icon.svg'
 
 export type CategoryIconType =
-  | 'math'
-  | 'history'
-  | 'physics'
-  | 'chem'
-  | 'book'
+  | 'globe'
+  | 'hash'
   | 'biology'
   | 'chemistry'
   | 'computer'
+  | 'code'
   | 'design'
   | 'finances'
   | 'music'
   | 'painting'
   | 'star'
+  | 'history'
+  | 'book'
 
 export const getCategoryIcon = (icon: CategoryIconType): string => {
   const iconMap: Record<CategoryIconType, string> = {
-    history: imgIconGlobe,
+    globe: imgIconGlobe,
+    hash: imgIconHash,
     biology: imgIconBiology,
     chemistry: imgIconChemistry,
     computer: imgIconComputer,
+    code: imgIconComputer,
     design: imgIconDesign,
     finances: imgIconFinances,
     music: imgIconMusic,
     painting: imgIconPainting,
     star: imgIconStar,
-    math: imgIconHash,
-    physics: imgIconHash,
-    chem: imgIconHash,
-    book: imgIconHash
+    history: imgIconGlobe,
+    book: imgIconGlobe
   }
 
   return iconMap[icon] || imgIconHash

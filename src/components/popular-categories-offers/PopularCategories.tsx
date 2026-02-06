@@ -66,9 +66,9 @@ const PopularCategoriesOffers: React.FC = () => {
     const load = async () => {
       try {
         const res = await categoryService.getCategories({ limit: 100 })
-        const all = res.data.items || [] 
+        const all = res.data.items || []
 
-        const data = POPULAR_CATEGORIES_CONFIG.map(cfg => {
+        const data = POPULAR_CATEGORIES_CONFIG.map((cfg) => {
           const found = all.find((c: any) => c.name === cfg.name)
 
           const totalOffersCount = found
@@ -107,18 +107,20 @@ const PopularCategoriesOffers: React.FC = () => {
   return (
     <Box sx={styles.wrapper}>
       <Box sx={styles.container}>
-        <Typography variant="h5" sx={styles.title}>
+        <Typography variant='h5' sx={styles.title}>
           Popular Categories
         </Typography>
 
         <Grid container spacing={3}>
-          {categories.map(category => (
+          {categories.map((category) => (
             <Grid item xs={12} md={4} key={category.name}>
               <Card onClick={handleCategoryClick} sx={styles.card}>
                 <CardContent sx={styles.cardContent}>
-                  <Box sx={{ ...styles.iconBox, backgroundColor: category.color }}>
+                  <Box
+                    sx={{ ...styles.iconBox, backgroundColor: category.color }}
+                  >
                     <Box
-                      component="img"
+                      component='img'
                       src={getCategoryIcon(category.icon)}
                       alt={category.name}
                       sx={styles.iconImage}
@@ -141,7 +143,7 @@ const PopularCategoriesOffers: React.FC = () => {
 
         <Box sx={styles.buttonWrapper}>
           <Button
-            variant="outlined"
+            variant='outlined'
             onClick={handleCategoryClick}
             sx={{ textTransform: 'none', px: 4 }}
           >

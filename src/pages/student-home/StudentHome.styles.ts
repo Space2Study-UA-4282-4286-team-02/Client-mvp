@@ -7,6 +7,6 @@ export const styles = {
   },
   pageWrapper: {
     flex: 1,
-    gap: '80px'
+    gap: { xs: '40px', sm: '80px' }
   }
 }

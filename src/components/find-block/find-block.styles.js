@@ -1,7 +1,7 @@
 export const styles = {
   container: {
     mt: { xs: '64px', md: '84px' },
-
+    borderRadius: '16px',
     img: {
       xs: { display: 'none' },
       md: { display: 'block' }

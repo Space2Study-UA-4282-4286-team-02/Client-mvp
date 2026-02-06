@@ -162,10 +162,7 @@ const FindOffers = () => {
         {t('common.labels.sortBy')}
       </Typography>
       <FormControl size='small' sx={{ minWidth: 180 }}>
-        <Select
-          onChange={onSortChange}
-          value={sortQuery}
-        >
+        <Select onChange={onSortChange} value={sortQuery}>
           {sortOptions.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
@@ -271,7 +268,12 @@ const FindOffers = () => {
           justifyContent: breakpoints.isMobile ? 'flex-start' : 'flex-end'
         }}
       >
-        <Box sx={{ width: breakpoints.isMobile ? '100%' : 'auto', maxWidth: breakpoints.isMobile ? 240 : 'none' }}>
+        <Box
+          sx={{
+            width: breakpoints.isMobile ? '100%' : 'auto',
+            maxWidth: breakpoints.isMobile ? 240 : 'none'
+          }}
+        >
           {renderSortSelect()}
         </Box>
       </Box>
@@ -289,13 +291,18 @@ const FindOffers = () => {
             }}
           >
             {offers.map((o: any) => (
-              <Box key={o._id} sx={{ mb: 2, p: 2, border: '1px solid #eee', borderRadius: 1 }}>
+              <Box
+                key={o._id}
+                sx={{ mb: 2, p: 2, border: '1px solid #eee', borderRadius: 1 }}
+              >
                 <Typography variant='subtitle1'>{o.title}</Typography>
 
                 <Typography variant='body2' sx={{ mt: 1 }}>
-                  <strong>{t('findOffers.item.subject')}</strong> {o.subject.name}{' '}
+                  <strong>{t('findOffers.item.subject')}</strong>{' '}
+                  {o.subject.name}{' '}
                   <span style={{ marginLeft: 12 }}>
-                    <strong>{t('findOffers.item.category')}</strong> {o.category.name}
+                    <strong>{t('findOffers.item.category')}</strong>{' '}
+                    {o.category.name}
                   </span>
                 </Typography>
 
@@ -306,7 +313,8 @@ const FindOffers = () => {
                 <Typography variant='body2' sx={{ mt: 1 }}>
                   <strong>Rating:</strong> {o.author.averageRating.tutor}
                   <span style={{ marginLeft: 12 }}>
-                    <strong>Price:</strong> {new Intl.NumberFormat('en-US').format(o.price)}
+                    <strong>Price:</strong>{' '}
+                    {new Intl.NumberFormat('en-US').format(o.price)}
                   </span>
                   <span style={{ marginLeft: 12 }}>
                     <strong>Date created:</strong>{' '}
