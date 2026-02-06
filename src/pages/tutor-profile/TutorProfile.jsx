@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useAppSelector } from '~/hooks/use-redux'
 
 import ProfileInfo from '~/containers/tutor-profile/profile-info/ProfileInfo'
@@ -12,38 +12,65 @@ import useAxios from '~/hooks/use-axios'
 
 import { profileItems } from '~/components/profile-item/complete-profile.constants'
 import { defaultResponses } from '~/constants'
-import { responseMock } from '~/pages/tutor-profile/constants'
+import { useLoaderData } from 'react-router-dom'
 
 const TutorProfile = () => {
-  const { user } = responseMock
-  const { reviews } = user.reviewStats || {}
-
+  const loaderData = useLoaderData()
   const { userId, userRole } = useAppSelector((state) => state.appMain)
+  const authorFromLoader =
+    loaderData?.data?.author || loaderData?.author || loaderData?.data
+
+  const hasAuthor = !!(authorFromLoader && authorFromLoader.firstName)
 
   const getUserData = useCallback(
     () => userService.getUserById(userId, userRole),
     [userId, userRole]
   )
 
-  const { loading, response } = useAxios({
+  const { loading, response: myData } = useAxios({
     service: getUserData,
-    fetchOnMount: true,
-    defaultResponse: defaultResponses.array
+    fetchOnMount: !hasAuthor,
+    defaultResponse: defaultResponses.object
   })
 
-  if (loading) {
+  const rawData = hasAuthor ? authorFromLoader : myData
+
+  const userData = useMemo(() => {
+    if (!rawData || Object.keys(rawData).length === 0) return null
+
+    const role = Array.isArray(rawData.role)
+      ? rawData.role[0]
+      : rawData.role || userRole
+
+    return {
+      ...rawData,
+      role: role,
+      mainSubjects: {
+        tutor: rawData.mainSubjects?.tutor || [],
+        student: rawData.mainSubjects?.student || []
+      },
+      averageRating: rawData.averageRating || { tutor: 0, student: 0 },
+      totalReviews: rawData.totalReviews || { tutor: 0, student: 0 }
+    }
+  }, [rawData, userRole])
+
+  if (!userData || (loading && !hasAuthor)) {
     return <Loader pageLoad size={70} />
   }
 
+  console.log(authorFromLoader)
+
   return (
     <PageWrapper>
-      <ProfileInfo userData={response} />
-      <CompleteProfileBlock data={response} profileItems={profileItems} />
+      <ProfileInfo userData={userData} />
+      {!loaderData && (
+        <CompleteProfileBlock data={userData} profileItems={profileItems} />
+      )}
       <VideoPresentation />
       <CommentsWithRatingBlock
-        averageRating={response.averageRating.tutor}
-        reviewsCount={reviews}
-        totalReviews={response.totalReviews.tutor}
+        averageRating={userData.averageRating[userData.role] || 0}
+        reviewsCount={userData.reviewStats?.counts || []}
+        totalReviews={userData.totalReviews[userData.role] || 0}
       />
     </PageWrapper>
   )
