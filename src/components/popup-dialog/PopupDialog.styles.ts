@@ -11,6 +11,7 @@ export const styles = {
     color: 'primary.900',
     position: 'absolute',
     right: { xs: '8px', sm: '20px' },
-    top: { xs: '8px', sm: '20px' }
+    top: { xs: '8px', sm: '20px' },
+    zIndex: 10,
   }
 }

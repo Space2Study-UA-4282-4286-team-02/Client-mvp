@@ -10,6 +10,7 @@ import {
   CategoryInterface,
   StatusEnum
 } from '~/types'
+import { SxProps, Theme } from '@mui/material'
 
 export interface Offer extends CommonEntityFields {
   title: string
@@ -55,4 +56,23 @@ export interface PriceRangeResponse {
 export interface GetOffersResponse {
   items: Offer[]
   count: number
+}
+
+export type CardVariant = 'grid' | 'list'
+
+export interface OfferCardContainerProps {
+  offers: Offer[]
+  cardVariant: CardVariant
+}
+
+export interface OfferCardProps {
+  offer: Offer
+  variant?: CardVariant
+  sx?: SxProps<Theme>
+}
+
+export interface EnrollOfferModalProps {
+  closeModal: () => void
+  offer: Offer
+  withMentorCard: boolean
 }

@@ -1,9 +1,18 @@
 import { vi } from 'vitest'
 import { screen } from '@testing-library/react'
 
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
+  return {
+    ...actual,
+    useLoaderData: vi.fn()
+  }
+})
+
 import useAxios from '~/hooks/use-axios'
 import TutorProfile from '~/pages/tutor-profile/TutorProfile.jsx'
 import { renderWithProviders } from '~tests/test-utils'
+import { useLoaderData } from 'react-router-dom'
 
 const route = '/tutor/my-profile'
 const appMain = {
@@ -57,26 +66,32 @@ const getFakeData = (load) => {
 vi.mock('~/hooks/use-axios')
 
 describe('TutorProfile', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.mocked(useLoaderData).mockReturnValue(mockData)
+  })
+
   it('should render loader', () => {
     const fakeData = getFakeData(true)
 
-    useAxios.mockImplementation(() => fakeData)
+    vi.mocked(useAxios).mockImplementation(() => fakeData)
+
     renderWithProviders(<TutorProfile />, {
-      initialEntries: route,
+      initialEntries: [route],
       preloadedState: { appMain }
     })
 
     const loader = screen.getByTestId('loader')
-
     expect(loader).toBeInTheDocument()
   })
 
   it('should find rendering name', () => {
     const fakeData = getFakeData(false)
 
-    useAxios.mockImplementation(() => fakeData)
+    vi.mocked(useAxios).mockImplementation(() => fakeData)
+
     renderWithProviders(<TutorProfile />, {
-      initialEntries: route,
+      initialEntries: [route],
       preloadedState: { appMain }
     })
 

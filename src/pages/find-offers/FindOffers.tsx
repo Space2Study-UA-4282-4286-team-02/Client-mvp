@@ -24,11 +24,18 @@ import { subjectService } from '~/services/subject-service'
 import { offerService } from '~/services/offer-service'
 import useBreakpoints from '~/hooks/use-breakpoints'
 import { styles as subjectsStyles } from '~/pages/subjects/Subjects.styles'
+import OfferCardsContainer from '~/containers/offer-cards-container/OfferCardsContainer'
+import { mockOffers } from '~/containers/offer-cards-container/mockData'
 import ViewSwitcher, { ViewMode } from '~/components/view-switcher/ViewSwitcher'
 
 const FindOffers = () => {
   const { t } = useTranslation()
   const breakpoints = useBreakpoints()
+  const cardVariant = breakpoints.isTablet
+    ? 'list'
+    : breakpoints.isLaptop
+      ? 'list'
+      : 'grid'
 
   const [searchParams, setSearchParams] = useSearchParams()
   const categoryId = searchParams.get('categoryId') ?? ''
@@ -280,63 +287,64 @@ const FindOffers = () => {
 
       <Box sx={{ mt: 3 }}>
         {errorOffers && <Typography color='error'>{errorOffers}</Typography>}
+        <OfferCardsContainer cardVariant={cardVariant} offers={offers} />
 
-        {offers.length > 0 ? (
-          <Box
-            sx={{
-              mt: 2,
-              display: 'grid',
-              gridTemplateColumns:
-                viewMode === 'list' ? '1fr' : 'repeat(3, 1fr)'
-            }}
-          >
-            {offers.map((o: any) => (
-              <Box
-                key={o._id}
-                sx={{ mb: 2, p: 2, border: '1px solid #eee', borderRadius: 1 }}
-              >
-                <Typography variant='subtitle1'>{o.title}</Typography>
+        {/*{offers.length > 0 ? (*/}
+        {/*  <Box*/}
+        {/*    sx={{*/}
+        {/*      mt: 2,*/}
+        {/*      display: 'grid',*/}
+        {/*      gridTemplateColumns:*/}
+        {/*        viewMode === 'list' ? '1fr' : 'repeat(3, 1fr)'*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    {offers.map((o: any) => (*/}
+        {/*      <Box*/}
+        {/*        key={o._id}*/}
+        {/*        sx={{ mb: 2, p: 2, border: '1px solid #eee', borderRadius: 1 }}*/}
+        {/*      >*/}
+        {/*        <Typography variant='subtitle1'>{o.title}</Typography>*/}
 
-                <Typography variant='body2' sx={{ mt: 1 }}>
-                  <strong>{t('findOffers.item.subject')}</strong>{' '}
-                  {o.subject.name}{' '}
-                  <span style={{ marginLeft: 12 }}>
-                    <strong>{t('findOffers.item.category')}</strong>{' '}
-                    {o.category.name}
-                  </span>
-                </Typography>
+        {/*        <Typography variant='body2' sx={{ mt: 1 }}>*/}
+        {/*          <strong>{t('findOffers.item.subject')}</strong>{' '}*/}
+        {/*          {o.subject.name}{' '}*/}
+        {/*          <span style={{ marginLeft: 12 }}>*/}
+        {/*            <strong>{t('findOffers.item.category')}</strong>{' '}*/}
+        {/*            {o.category.name}*/}
+        {/*          </span>*/}
+        {/*        </Typography>*/}
 
-                <Typography variant='body2' sx={{ mt: 1 }}>
-                  {o.author.lastName}, {o.author.firstName}
-                </Typography>
+        {/*        <Typography variant='body2' sx={{ mt: 1 }}>*/}
+        {/*          {o.author.lastName}, {o.author.firstName}*/}
+        {/*        </Typography>*/}
 
-                <Typography variant='body2' sx={{ mt: 1 }}>
-                  <strong>Rating:</strong> {o.author.averageRating.tutor}
-                  <span style={{ marginLeft: 12 }}>
-                    <strong>Price:</strong>{' '}
-                    {new Intl.NumberFormat('en-US').format(o.price)}
-                  </span>
-                  <span style={{ marginLeft: 12 }}>
-                    <strong>Date created:</strong>{' '}
-                    {new Date(o.createdAt).toLocaleString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric'
-                    })}
-                  </span>
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-        ) : loadingOffers ? (
-          <Typography>{t('findOffers.loading')}</Typography>
-        ) : (
-          !errorOffers && (
-            <Typography sx={{ color: 'text.secondary' }}>
-              {t('findOffers.notFound.description')}
-            </Typography>
-          )
-        )}
+        {/*        <Typography variant='body2' sx={{ mt: 1 }}>*/}
+        {/*          <strong>Rating:</strong> {o.author.averageRating.tutor}*/}
+        {/*          <span style={{ marginLeft: 12 }}>*/}
+        {/*            <strong>Price:</strong>{' '}*/}
+        {/*            {new Intl.NumberFormat('en-US').format(o.price)}*/}
+        {/*          </span>*/}
+        {/*          <span style={{ marginLeft: 12 }}>*/}
+        {/*            <strong>Date created:</strong>{' '}*/}
+        {/*            {new Date(o.createdAt).toLocaleString('en-US', {*/}
+        {/*              year: 'numeric',*/}
+        {/*              month: 'short',*/}
+        {/*              day: 'numeric'*/}
+        {/*            })}*/}
+        {/*          </span>*/}
+        {/*        </Typography>*/}
+        {/*      </Box>*/}
+        {/*    ))}*/}
+        {/*  </Box>*/}
+        {/*) : loadingOffers ? (*/}
+        {/*  <Typography>{t('findOffers.loading')}</Typography>*/}
+        {/*) : (*/}
+        {/*  !errorOffers && (*/}
+        {/*    <Typography sx={{ color: 'text.secondary' }}>*/}
+        {/*      {t('findOffers.notFound.description')}*/}
+        {/*    </Typography>*/}
+        {/*  )*/}
+        {/*)}*/}
 
         <PopularCategoriesOffers />
       </Box>
