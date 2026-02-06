@@ -10,7 +10,7 @@ const HomeRoute = () => {
 
   useEffect(() => {
     if (userRole) {
-      navigate(guestRoutes[userRole].route)
+      navigate(`/${guestRoutes[userRole].route}`)
     }
   }, [navigate, userRole])
 

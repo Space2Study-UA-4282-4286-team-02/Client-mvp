@@ -106,9 +106,7 @@ const SearchAutocomplete = ({
     visibility: searchInput ? VisibilityEnum.Hidden : VisibilityEnum.Visible
   }
   const clearIconVisibility = {
-    visibility: searchInput
-      ? VisibilityEnum.Visible
-      : VisibilityEnum.Hidden
+    visibility: searchInput ? VisibilityEnum.Visible : VisibilityEnum.Hidden
   }
 
   return (

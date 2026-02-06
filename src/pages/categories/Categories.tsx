@@ -25,16 +25,7 @@ import SearchAutocomplete from '~/components/search-autocomplete/SearchAutocompl
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 import OfferRequestBlock from '~/containers/find-offer/offer-request-block/OfferRequestBlock'
 
-import imgIconGlobe from '~/assets/img/categories/globe-icon.svg'
-import imgIconHash from '~/assets/img/categories/hash-icon.svg'
-
-type IconType = 'math' | 'history' | 'physics' | 'chem' | 'book'
-
-const imgToIcon = (img: IconType): string => {
-  if (img === 'history') return imgIconGlobe
-
-  return imgIconHash
-}
+import { CategoryIconType, getCategoryIcon } from '~/utils/category-helpers'
 
 const Categories = () => {
   const { t } = useTranslation()
@@ -82,7 +73,7 @@ const Categories = () => {
         return (
           <CategoryItem
             color={item.appearance.color}
-            img={imgToIcon(item.appearance.icon as IconType)}
+            img={getCategoryIcon(item.appearance.icon as CategoryIconType)}
             key={item._id}
             link={`${authRoutes.categories.path}/subjects?categoryId=${item._id}`}
             offers={item.totalOffers.student + item.totalOffers.tutor}

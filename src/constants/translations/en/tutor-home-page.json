@@ -10,6 +10,27 @@
   "popularCategories": {
     "title": "Popular Categories",
     "description": "Explore tutoring categories you're passionate about.",
-    "viewMore": "View more"
+    "showAll": "Show all categories"
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "description": "4 steps to easy tutoring with Space2Study",
+    "button": "Find students",
+    "signUp": {
+      "title": "Sign up",
+      "description": "Registering on the Space2Study platform is very simple, just enter your email or use your Google account."
+    },
+    "createTutorAccount": {
+      "title": "Create a Tutor Account",
+      "description": "Creating a tutor account is easy, you just need to select a subject, upload teaching materials and create an offer."
+    },
+    "getNewStudents": {
+      "title": "Get New Students",
+      "description": "Create fruitful cooperation with your students, confirming their requests, and start teaching."
+    },
+    "receiveFeedbacks": {
+      "title": "Receive Feedbacks",
+      "description": "Receive positive feedback for your work to become popular and get even more satisfied students."
+    }
   }
 }
