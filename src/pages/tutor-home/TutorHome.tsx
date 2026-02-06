@@ -33,11 +33,11 @@ const TutorHome = () => {
   return (
     <PageWrapper data-testid='tutorHome' sx={styles.pageWrapper}>
       <FindBlock translationKey={translationKey} />
+      <PopularCategories translationKey={popularCategoriesKey} />
       <HowItWorksBlock
         cards={howItWorksCards}
         translationKey='tutorHomePage.howItWorks'
       />
-      <PopularCategories translationKey={popularCategoriesKey} />
     </PageWrapper>
   )
 }

@@ -35,12 +35,12 @@ const StudentHome = () => {
   return (
     <PageWrapper data-testid='studentHome' sx={styles.pageWrapper}>
       <FindBlock translationKey={translationKey} />
+      <PopularCategories translationKey={popularCategoriesKey} />
       <HowItWorksBlock
         cards={howItWorksCards}
         id={studentRoutes.navBar.howItWorks.route}
         translationKey='studentHomePage.howItWorks'
       />
-      <PopularCategories translationKey={popularCategoriesKey} />
       <Faq />
     </PageWrapper>
   )
