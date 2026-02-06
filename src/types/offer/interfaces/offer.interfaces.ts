@@ -10,6 +10,7 @@ import {
   CategoryInterface,
   StatusEnum
 } from '~/types'
+import { SxProps, Theme } from '@mui/material'
 
 export interface Offer extends CommonEntityFields {
   title: string

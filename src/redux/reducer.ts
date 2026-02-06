@@ -21,7 +21,7 @@ interface UserState {
   pageLoad: boolean
 }
 
-const initialState: UserState = {
+export const initialState: UserState = {
   accessToken: '',
   userId: '',
   userRole: '',
