@@ -31,6 +31,8 @@ export const offerService = {
     name?: string
     categoryId?: string | null
     subjectId?: string | null
+    authorRole?: UserRoleEnum
+    sort?: string
     skip?: number
     limit?: number
   }) => {
@@ -43,6 +45,8 @@ export const offerService = {
       qs.categoryId = params.categoryId
     if (params.subjectId != null && params.subjectId !== '')
       qs.subjectId = params.subjectId
+    if (params.authorRole) qs.authorRole = params.authorRole
+    if (params.sort != null && params.sort !== '') qs.sort = params.sort
     if (typeof params.skip !== 'undefined') qs.skip = params.skip
     if (typeof params.limit !== 'undefined') qs.limit = params.limit
 
