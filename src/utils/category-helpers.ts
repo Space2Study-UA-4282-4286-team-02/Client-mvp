@@ -38,7 +38,7 @@ export const getCategoryIcon = (icon: CategoryIconType): string => {
     painting: imgIconPainting,
     star: imgIconStar,
     history: imgIconGlobe,
-    book: imgIconStar
+    book: imgIconGlobe
   }
 
   return iconMap[icon] || imgIconHash
