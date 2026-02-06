@@ -8,7 +8,7 @@ export const styles = {
       content: '""',
       width: '100%',
       height: '2px',
-      backgroundColor: 'primary.100'
+      backgroundColor: 'primary.400'
     }
   },
   continue: {
